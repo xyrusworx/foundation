@@ -1,0 +1,20 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Company>XyrusWorx</Company>
+    <Product>XyrusWorx Foundation</Product>
+    <Copyright>Copyright (c) 2014-2017 XyrusWorx. All rights reserved.</Copyright>
+    <Authors>$(Company)</Authors>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageVersion>2.0.5</PackageVersion>
+    <PackageBaseVersion>2.0.5</PackageBaseVersion>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>http://xyrus-worx.org/license/mit</PackageLicenseUrl>
+    <PackageProjectUrl>http://xyrus-worx.org</PackageProjectUrl>
+    <PackageIconUrl>http://media.xyrus-worx.org/static/xw.ico</PackageIconUrl>
+    <AssemblyCompany>$(Company)</AssemblyCompany>
+    <AssemblyVersion>$(PackageBaseVersion)</AssemblyVersion>
+    <FileVersion>$(PackageBaseVersion)</FileVersion>
+    <Version>$(PackageVersion)</Version>
+    <BuildPackage>true</BuildPackage>
+  </PropertyGroup>
+</Project>
