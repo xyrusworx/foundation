@@ -53,6 +53,48 @@ namespace XyrusWorx
 			return new string[0];
 		}
 
+		[NotNull]
+		public IEnumerable<StringKey> Flags
+		{
+			get
+			{
+				if (mArguments == null)
+				{
+					mArguments = Parse();
+				}
+
+				return mArguments.Where(y => !y.Value.Any() || y.Value.All(x => x == null)).Where(x => !x.Key.IsEmpty).Select(x => x.Key);
+			}
+		}
+
+		[NotNull]
+		public IEnumerable<StringKey> Arguments
+		{
+			get
+			{
+				if (mArguments == null)
+				{
+					mArguments = Parse();
+				}
+
+				return mArguments.Where(y => y.Value.Any() && y.Value.All(x => x != null)).Where(x => !x.Key.IsEmpty).Select(x => x.Key);
+			}
+		}
+
+		[NotNull]
+		public IEnumerable<string> Values
+		{
+			get
+			{
+				if (mArguments == null)
+				{
+					mArguments = Parse();
+				}
+
+				return mArguments.GetValueByKeyOrDefault(new StringKey())?.AsEnumerable() ?? new string[0];
+			}
+		}
+
 		public override bool IsReadOnly => true;
 		public override bool Exists(StringKey key)
 		{
@@ -193,7 +235,28 @@ namespace XyrusWorx
 				list.Add(value);
 			}
 
-			result.Add(new StringKey(), remainder);
+			var looseTokens = new List<string>();
+
+			foreach (var item in remainder)
+			{
+				if (!item.StartsWith(mAliasPrefix) && !item.StartsWith(mParameterPrefix))
+				{
+					looseTokens.Add(item);
+				}
+				else
+				{
+					var parameter = item.StartsWith(mParameterPrefix) ? item.Substring(mParameterPrefix.Length) : null;
+					var alias = item.StartsWith(mAliasPrefix) && !item.StartsWith(mParameterPrefix) ? item.Substring(mAliasPrefix.Length) : null;
+
+					var flag = parameter ?? alias;
+					if (!string.IsNullOrWhiteSpace(flag))
+					{
+						result.Add(flag, new List<string>{null});
+					}
+				}
+			}
+
+			result.Add(new StringKey(), looseTokens);
 
 			return result;
 		}
