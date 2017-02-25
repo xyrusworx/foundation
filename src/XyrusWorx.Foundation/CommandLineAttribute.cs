@@ -1,9 +1,9 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using XyrusWorx.Diagnostics;
 
 namespace XyrusWorx
@@ -86,9 +86,8 @@ namespace XyrusWorx
 			if (targetType.IsArray)
 			{
 				var elementType = targetType.GetElementType().GetTypeInfo();
-				var resultingElements = new ArrayList();
 
-				return resultingElements.ToArray(elementType.UnderlyingSystemType);
+				return new ArrayList().ToArray(elementType.UnderlyingSystemType);
 			}
 
 			return targetType.IsValueType ? Activator.CreateInstance(targetType.UnderlyingSystemType) : null;

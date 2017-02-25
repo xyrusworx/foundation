@@ -23,8 +23,6 @@ namespace XyrusWorx
 		[CanBeNull]
 		public string ShortForm { get; set; }
 
-		public bool SetByDefault { get; set; }
-
 		protected override Result PrepareOverride(CommandLineKeyValueStore parser)
 		{
 			parser.RegisterFlag(Name);
@@ -41,6 +39,6 @@ namespace XyrusWorx
 
 			return new Result<object>(parser.Exists(Name));
 		}
-		protected override object GetDefaultValue() => SetByDefault;
+		protected override object GetDefaultValue() => false;
 	}
 }

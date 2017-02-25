@@ -1,6 +1,7 @@
-using System;
-using System.Threading;
 using JetBrains.Annotations;
+using System;
+using System.Linq;
+using XyrusWorx.Diagnostics;
 
 namespace XyrusWorx.Runtime
 {
@@ -68,6 +69,77 @@ namespace XyrusWorx.Runtime
 		public IScope WithColor(ConsoleColor? foreground = null, ConsoleColor? background = null)
 		{
 			return new ConsoleColorScope(foreground, background).Enter();
+		}
+
+		public void WriteHelp()
+		{
+			ConsoleColor emphasisColor;
+
+			if (Context.IsWindows)
+			{
+				emphasisColor = ConsoleColor.White;
+			}
+			else if (Context.IsLinux)
+			{
+				emphasisColor = Console.ForegroundColor;
+			}
+			else
+			{
+				emphasisColor = Console.ForegroundColor;
+			}
+
+			var doc = new CommandLineDocumentation();
+			var writer = new LightConsoleWriter { IncludeScope = false };
+
+			GetCommandLineProcessor().WriteDocumentation(doc);
+
+			var names = doc.GetSortedTokens().OfType<CommandLineNamedTokenDocumentation>().ToArray();
+			var shortDescriptions = names.Where(x => !string.IsNullOrWhiteSpace(x.ShortDescription)).ToArray();
+			
+			Console.WriteLine($"Usage: {Metadata.ModuleName} {doc}");
+
+			if (shortDescriptions.Any())
+			{
+				Console.WriteLine();
+
+				using (WithColor(emphasisColor))
+				{
+					Console.WriteLine("Available command line parameters");
+					Console.WriteLine("-------------------------------------");
+				}
+
+				var padWidth = shortDescriptions.Max(x => $"-{x.ShortName} / --{x.Name}".Length) + 3;
+
+				foreach (var token in shortDescriptions)
+				{
+					var label = $"-{token.ShortName} / --{token.Name}".PadRight(padWidth);
+					writer.WriteInformation($"{label}{token.ShortDescription}");
+				}
+			}
+
+			var descriptions = names.Where(x => !string.IsNullOrWhiteSpace(x.Description)).ToArray();
+
+			if (descriptions.Any())
+			{
+				using (WithColor(emphasisColor))
+				{
+					Console.WriteLine("Parameter descriptions");
+					Console.WriteLine("--------------------------");
+				}
+
+				foreach (var token in descriptions)
+				{
+					var label = $"-{token.ShortName} / --{token.Name}";
+
+					using (WithColor(emphasisColor))
+					{
+						Console.WriteLine(label);
+					}
+
+					writer.WriteInformation(token.Description);
+					Console.WriteLine();
+				}
+			}
 		}
 
 		protected sealed override void Cleanup(bool wasCancelled)

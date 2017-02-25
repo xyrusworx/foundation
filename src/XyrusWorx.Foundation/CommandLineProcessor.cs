@@ -55,6 +55,20 @@ namespace XyrusWorx
 				property.Item1.Visit(commandLine, property.Item2, model, mLog ?? new NullLogWriter());
 			}
 		}
+		public void WriteDocumentation([NotNull] CommandLineDocumentation documentation)
+		{
+			if (documentation == null)
+			{
+				throw new ArgumentNullException(nameof(documentation));
+			}
+
+			foreach (var property in mProperties)
+			{
+				var attribute = property.Item2.GetCustomAttribute<CommandLineAnnotationAttribute>();
+
+				attribute.AddToDocumentation(documentation, property.Item2);
+			}
+		}
 
 		private void CollectProperties()
 		{

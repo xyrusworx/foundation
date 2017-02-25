@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -14,6 +15,9 @@ namespace XyrusWorx.Runtime
 		{
 			mAssembly = assembly;
 		}
+
+		[NotNull]
+		public string ModuleName => Process.GetCurrentProcess().MainModule.ModuleName;
 
 		[CanBeNull] public string AssemblyName => mAssembly?.FullName;
 

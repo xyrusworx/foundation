@@ -77,6 +77,9 @@ namespace XyrusWorx.Runtime
 		[NotNull] public CommandLineKeyValueStore CommandLine { get; }
 		[NotNull] public ConfigurationReaderChain Settings { get; }
 
+		[NotNull]
+		public CommandLineProcessor GetCommandLineProcessor() => mCommandLine;
+
 		protected sealed override IResult Initialize()
 		{
 			SetupApplication();
