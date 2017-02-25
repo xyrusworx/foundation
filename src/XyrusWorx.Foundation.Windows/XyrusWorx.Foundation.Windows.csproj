@@ -28,6 +28,7 @@
     <PackageReference Include="Expression.Interaction">
       <Version>3.0.40218</Version>
     </PackageReference>
+    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <Reference Include="PresentationCore" />

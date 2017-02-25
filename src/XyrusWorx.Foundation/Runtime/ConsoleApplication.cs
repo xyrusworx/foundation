@@ -102,7 +102,7 @@ namespace XyrusWorx.Runtime
 				Console.WriteLine("Usage");
 			}
 
-			Console.WriteLine($"   {Metadata.ModuleName} {doc.ToString().WordWrap(writer.SuggestedMaxLineLength, new string(' ', 3), "")}");
+			Console.WriteLine($"   {Metadata.ModuleName} {doc}".WordWrap(writer.SuggestedMaxLineLength, new string(' ', 3), ""));
 
 			if (shortDescriptions.Any())
 			{
@@ -118,7 +118,7 @@ namespace XyrusWorx.Runtime
 				foreach (var token in shortDescriptions)
 				{
 					var label = GetTokenLabel(token).PadRight(padWidth);
-					writer.WriteInformation($"   {label}{token.ShortDescription.WordWrap(writer.SuggestedMaxLineLength, "   " + new string(' ', padWidth), "")}");
+					writer.WriteInformation($"   {label}{token.ShortDescription}".WordWrap(writer.SuggestedMaxLineLength, new string(' ', padWidth + 3), ""));
 				}
 			}
 

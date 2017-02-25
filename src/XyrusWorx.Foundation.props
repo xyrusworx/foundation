@@ -5,12 +5,12 @@
     <Copyright>Copyright (c) 2014-2017 XyrusWorx. All rights reserved.</Copyright>
     <Authors>$(Company)</Authors>
     <PackageId>$(AssemblyName)</PackageId>
-    <PackageVersion>2.2.0</PackageVersion>
-    <PackageBaseVersion>2.2.0</PackageBaseVersion>
+    <PackageVersion>2.2.3</PackageVersion>
+    <PackageBaseVersion>2.2.3</PackageBaseVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://xyrus-worx.org/license/mit</PackageLicenseUrl>
     <PackageProjectUrl>http://xyrus-worx.org</PackageProjectUrl>
-    <PackageIconUrl>http://media.xyrus-worx.org/static/xw.ico</PackageIconUrl>
+    <PackageIconUrl>http://media.xyrus-worx.org/static/xw.png</PackageIconUrl>
     <AssemblyCompany>$(Company)</AssemblyCompany>
     <AssemblyVersion>$(PackageBaseVersion)</AssemblyVersion>
     <FileVersion>$(PackageBaseVersion)</FileVersion>

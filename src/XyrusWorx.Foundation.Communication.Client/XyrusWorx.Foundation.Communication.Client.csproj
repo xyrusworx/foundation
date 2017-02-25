@@ -23,6 +23,9 @@
     <Compile Include="**\*.cs" Exclude="obj/**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
