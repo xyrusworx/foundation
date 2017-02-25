@@ -96,25 +96,29 @@ namespace XyrusWorx.Runtime
 
 			var names = doc.GetSortedTokens().OfType<CommandLineNamedTokenDocumentation>().ToArray();
 			var shortDescriptions = names.Where(x => !string.IsNullOrWhiteSpace(x.ShortDescription)).ToArray();
-			
-			Console.WriteLine($"Usage: {Metadata.ModuleName} {doc}");
+
+			using (WithColor(emphasisColor))
+			{
+				Console.WriteLine("Usage");
+			}
+
+			Console.WriteLine($"   {Metadata.ModuleName} {doc.ToString().WordWrap(writer.SuggestedMaxLineLength, new string(' ', 3), "")}");
 
 			if (shortDescriptions.Any())
 			{
-				Console.WriteLine();
-
 				using (WithColor(emphasisColor))
 				{
+					Console.WriteLine();
 					Console.WriteLine("Available command line parameters");
-					Console.WriteLine("-------------------------------------");
+					Console.WriteLine();
 				}
 
-				var padWidth = shortDescriptions.Max(x => $"-{x.ShortName} / --{x.Name}".Length) + 3;
+				var padWidth = shortDescriptions.Max(x => GetTokenLabel(x).Length) + 2;
 
 				foreach (var token in shortDescriptions)
 				{
-					var label = $"-{token.ShortName} / --{token.Name}".PadRight(padWidth);
-					writer.WriteInformation($"{label}{token.ShortDescription}");
+					var label = GetTokenLabel(token).PadRight(padWidth);
+					writer.WriteInformation($"   {label}{token.ShortDescription.WordWrap(writer.SuggestedMaxLineLength, "   " + new string(' ', padWidth), "")}");
 				}
 			}
 
@@ -124,20 +128,21 @@ namespace XyrusWorx.Runtime
 			{
 				using (WithColor(emphasisColor))
 				{
+					Console.WriteLine();
 					Console.WriteLine("Parameter descriptions");
-					Console.WriteLine("--------------------------");
+					Console.WriteLine();
 				}
 
 				foreach (var token in descriptions)
 				{
-					var label = $"-{token.ShortName} / --{token.Name}";
+					var label = token.Name;
 
 					using (WithColor(emphasisColor))
 					{
-						Console.WriteLine(label);
+						Console.WriteLine($"   {label}");
 					}
 
-					writer.WriteInformation(token.Description);
+					writer.WriteInformation(token.Description.WordWrap(writer.SuggestedMaxLineLength, "      "));
 					Console.WriteLine();
 				}
 			}
@@ -159,6 +164,10 @@ namespace XyrusWorx.Runtime
 		}
 		protected virtual void CleanupOverride()
 		{
+			if (ExecutionResult.HasError)
+			{
+				Log.Write(ExecutionResult);
+			}
 		}
 
 #if(!NO_NATIVE_BOOTSTRAPPER)
@@ -220,6 +229,16 @@ namespace XyrusWorx.Runtime
 			WaitHandler.Wait(() => Console.KeyAvailable);
 
 			Console.ReadKey(true);
+		}
+
+		private string GetTokenLabel(CommandLineNamedTokenDocumentation token)
+		{
+			if (string.IsNullOrWhiteSpace(token.ShortName))
+			{
+				return $"--{token.Name}";
+			}
+
+			return $"-{token.ShortName} / --{token.Name}";
 		}
 	}
 }
