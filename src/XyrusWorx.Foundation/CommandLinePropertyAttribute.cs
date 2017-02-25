@@ -43,5 +43,7 @@ namespace XyrusWorx
 			return new Result<object>(parser.ReadMany(Name).ToArray());
 		}
 		protected override object GetDefaultValue() => DefaultValue;
+
+		public override StringKey GetKey() => Name;
 	}
 }

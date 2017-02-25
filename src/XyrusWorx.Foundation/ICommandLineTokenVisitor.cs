@@ -7,6 +7,8 @@ namespace XyrusWorx
 	[PublicAPI]
 	public interface ICommandLineTokenVisitor
 	{
+		StringKey GetKey();
+
 		[NotNull]
 		Result Prepare([NotNull] CommandLineKeyValueStore parser);
 

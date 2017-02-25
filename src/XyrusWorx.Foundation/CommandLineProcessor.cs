@@ -28,6 +28,8 @@ namespace XyrusWorx
 			CollectProperties();
 		}
 
+		public IEnumerable<StringKey> GetKnownKeys() => mProperties.Select(x => x.Item1.GetKey()).Where(x => !x.IsEmpty);
+
 		public void Read([NotNull] CommandLineKeyValueStore commandLine, [NotNull] object model)
 		{
 			if (commandLine == null)

@@ -40,5 +40,7 @@ namespace XyrusWorx
 			return new Result<object>(parser.Exists(Name));
 		}
 		protected override object GetDefaultValue() => false;
+
+		public override StringKey GetKey() => Name;
 	}
 }

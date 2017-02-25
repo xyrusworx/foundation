@@ -12,5 +12,7 @@ namespace XyrusWorx
 		{
 			return new Result<object>(parser.ReadTail().ToArray());
 		}
+
+		public override StringKey GetKey() => new StringKey();
 	}
 }

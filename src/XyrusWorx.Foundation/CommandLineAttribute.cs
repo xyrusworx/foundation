@@ -155,5 +155,7 @@ namespace XyrusWorx
 				return Result.CreateError<Result<object>>($"Failed to convert \"{value}\" to target type \"{targetType}\".");
 			}
 		}
+
+		public abstract StringKey GetKey();
 	}
 }
