@@ -67,8 +67,12 @@ namespace XyrusWorx
 			foreach (var property in mProperties)
 			{
 				var attribute = property.Item2.GetCustomAttribute<CommandLineAnnotationAttribute>();
+				if (attribute == null)
+				{
+					attribute = new CommandLineAnnotationAttribute();
+				}
 
-				attribute?.AddToDocumentation(documentation, property.Item2);
+				attribute.AddToDocumentation(documentation, property.Item2);
 			}
 		}
 

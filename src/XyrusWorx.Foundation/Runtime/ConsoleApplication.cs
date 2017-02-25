@@ -90,8 +90,9 @@ namespace XyrusWorx.Runtime
 
 			var doc = new CommandLineDocumentation();
 			var writer = new LightConsoleWriter { IncludeScope = false };
+			var processor = GetCommandLineProcessor();
 
-			GetCommandLineProcessor().WriteDocumentation(doc);
+			processor.WriteDocumentation(doc);
 
 			var names = doc.GetSortedTokens().OfType<CommandLineNamedTokenDocumentation>().ToArray();
 			var shortDescriptions = names.Where(x => !string.IsNullOrWhiteSpace(x.ShortDescription)).ToArray();
