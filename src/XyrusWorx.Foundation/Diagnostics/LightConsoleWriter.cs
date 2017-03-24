@@ -22,29 +22,14 @@ namespace XyrusWorx.Diagnostics
 
 		protected override ConsoleColor? GetForeground(LogMessageClass messageClass)
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			switch (messageClass)
 			{
-				switch (messageClass)
-				{
-					case LogMessageClass.Debug:
-						return ConsoleColor.DarkGray;
-					case LogMessageClass.Warning:
-						return ConsoleColor.Yellow;
-					case LogMessageClass.Error:
-						return ConsoleColor.Red;
-				}
-			}
-			else
-			{
-				switch (messageClass)
-				{
-					case LogMessageClass.Debug:
-						return ConsoleColor.DarkMagenta;
-					case LogMessageClass.Warning:
-						return ConsoleColor.DarkYellow;
-					case LogMessageClass.Error:
-						return ConsoleColor.DarkRed;
-				}
+				case LogMessageClass.Debug:
+					return ConsoleColor.DarkGray;
+				case LogMessageClass.Warning:
+					return ConsoleColor.Yellow;
+				case LogMessageClass.Error:
+					return ConsoleColor.Red;
 			}
 
 			return null;

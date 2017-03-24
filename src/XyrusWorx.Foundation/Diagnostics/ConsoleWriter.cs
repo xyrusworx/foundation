@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using JetBrains.Annotations;
+using System;
 using System.Text;
-using JetBrains.Annotations;
 using XyrusWorx.Runtime;
 
 namespace XyrusWorx.Diagnostics
@@ -12,13 +11,6 @@ namespace XyrusWorx.Diagnostics
 		private static readonly object mDispatchLock = new object();
 		private readonly int mLineLength;
 
-		static ConsoleWriter()
-		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-			{
-				Console.OutputEncoding = Encoding.Unicode;
-			}
-		}
 		public ConsoleWriter()
 		{
 			int lineLength;
@@ -75,48 +67,26 @@ namespace XyrusWorx.Diagnostics
 
 		protected virtual ConsoleColor? GetForeground(LogMessageClass messageClass)
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			switch (messageClass)
 			{
-				switch (messageClass)
-				{
-					case LogMessageClass.Debug:
-						return ConsoleColor.DarkGray;
-					case LogMessageClass.Warning:
-						return ConsoleColor.Yellow;
-					case LogMessageClass.Error:
-						return ConsoleColor.White;
-				}
-			}
-			else
-			{
-				switch (messageClass)
-				{
-					case LogMessageClass.Debug:
-						return ConsoleColor.DarkMagenta;
-					case LogMessageClass.Warning:
-						return ConsoleColor.DarkYellow;
-					case LogMessageClass.Error:
-						return ConsoleColor.DarkRed;
-				}
+				case LogMessageClass.Debug:
+					return ConsoleColor.DarkGray;
+				case LogMessageClass.Warning:
+					return ConsoleColor.Yellow;
+				case LogMessageClass.Error:
+					return ConsoleColor.White;
 			}
 
 			return null;
 		}
 		protected virtual ConsoleColor? GetBackground(LogMessageClass messageClass)
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			switch (messageClass)
 			{
-				switch (messageClass)
-				{
-					case LogMessageClass.Warning:
-						return ConsoleColor.DarkMagenta;
-					case LogMessageClass.Error:
-						return ConsoleColor.DarkRed;
-				}
-			}
-			else
-			{
-				return null;
+				case LogMessageClass.Warning:
+					return ConsoleColor.DarkMagenta;
+				case LogMessageClass.Error:
+					return ConsoleColor.DarkRed;
 			}
 
 			return null;

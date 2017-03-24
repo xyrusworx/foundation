@@ -71,30 +71,25 @@ namespace XyrusWorx.Runtime
 			return new ConsoleColorScope(foreground, background).Enter();
 		}
 
-		public void WriteHelp()
+		public void WriteHelp(ConsoleColor emphasisColor = ConsoleColor.White)
 		{
-			ConsoleColor emphasisColor;
-
-			if (Context.IsWindows)
-			{
-				emphasisColor = ConsoleColor.White;
-			}
-			else if (Context.IsLinux)
-			{
-				emphasisColor = Console.ForegroundColor;
-			}
-			else
-			{
-				emphasisColor = Console.ForegroundColor;
-			}
-
 			var doc = new CommandLineDocumentation();
-			var writer = new LightConsoleWriter { IncludeScope = false };
 			var processor = GetCommandLineProcessor();
 
 			processor.WriteDocumentation(doc);
 
-			var names = doc.GetSortedTokens().OfType<CommandLineNamedTokenDocumentation>().ToArray();
+			WriteHelp(doc, emphasisColor);
+		}
+		public void WriteHelp([NotNull] CommandLineDocumentation documentation, ConsoleColor emphasisColor = ConsoleColor.White)
+		{
+			if (documentation == null)
+			{
+				throw new ArgumentNullException(nameof(documentation));
+			}
+
+			var writer = new LightConsoleWriter { IncludeScope = false };
+
+			var names = documentation.GetSortedTokens().OfType<CommandLineNamedTokenDocumentation>().ToArray();
 			var shortDescriptions = names.Where(x => !string.IsNullOrWhiteSpace(x.ShortDescription)).ToArray();
 
 			using (WithColor(emphasisColor))
@@ -102,7 +97,7 @@ namespace XyrusWorx.Runtime
 				Console.WriteLine("Usage");
 			}
 
-			Console.WriteLine($"   {Metadata.ModuleName} {doc}".WordWrap(writer.SuggestedMaxLineLength, new string(' ', 3), ""));
+			Console.WriteLine($"   {Metadata.ModuleName} {documentation}".WordWrap(writer.SuggestedMaxLineLength, new string(' ', 3), ""));
 
 			if (shortDescriptions.Any())
 			{
@@ -186,24 +181,8 @@ namespace XyrusWorx.Runtime
 				return;
 			}
 
-			ConsoleColor emphasisColor;
-			ConsoleColor dimColor;
-
-			if (Context.IsWindows)
-			{
-				emphasisColor = ConsoleColor.White;
-				dimColor = ConsoleColor.DarkGray;
-			}
-			else if (Context.IsLinux)
-			{
-				emphasisColor = Console.ForegroundColor;
-				dimColor = ConsoleColor.Gray;
-			}
-			else
-			{
-				emphasisColor = Console.ForegroundColor;
-				dimColor = Console.ForegroundColor;
-			}
+			var emphasisColor = ConsoleColor.White;
+			var dimColor = ConsoleColor.DarkGray;
 
 			using (new ConsoleColorScope(emphasisColor).Enter())
 			{
