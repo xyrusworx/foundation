@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Routing;
-using XyrusWorx.Communication.Serialization;
 using XyrusWorx.Diagnostics;
 using XyrusWorx.IO;
 

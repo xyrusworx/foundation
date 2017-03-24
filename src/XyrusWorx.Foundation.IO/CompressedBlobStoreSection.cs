@@ -100,8 +100,9 @@ namespace XyrusWorx.IO
 		}
 
 		internal IEnumerable<StringKey> Elements() => Enumerate();
+		internal Stream GetStream(StringKey key, AccessMode accessMode) => OpenStream(key, accessMode);
 
-		protected internal override Stream OpenStream(StringKey key, AccessMode accessMode)
+		protected override Stream OpenStream(StringKey key, AccessMode accessMode)
 		{
 			if (accessMode.HasFlag(AccessMode.Append))
 			{

@@ -97,7 +97,7 @@ namespace XyrusWorx.IO
 		public override StringKeySequence Identifier => mRootFolder.Identifier;
 
 		protected override IEnumerable<StringKey> Enumerate() => mRootFolder.Elements();
-		protected internal override Stream OpenStream(StringKey key, AccessMode accessMode) => mRootFolder.OpenStream(key, accessMode);
+		protected override Stream OpenStream(StringKey key, AccessMode accessMode) => mRootFolder.GetStream(key, accessMode);
 
 		protected override void DisposeOverride()
 		{

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Net;
 using System.Text;
-using JetBrains.Annotations;
-using XyrusWorx.Communication.Client.Serialization;
 using XyrusWorx.IO;
 
 namespace XyrusWorx.Communication.Client

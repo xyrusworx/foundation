@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using XyrusWorx.IO;
 
-namespace XyrusWorx.Communication.Client.Serialization
+namespace XyrusWorx.IO
 {
 	[PublicAPI]
 	public sealed class JsonCommunicationStrategy : CommunicationStrategy
 	{
 		private readonly JsonSerializer mSerializer;
 
-		internal JsonCommunicationStrategy()
+		public JsonCommunicationStrategy()
 		{
 			mSerializer = new JsonSerializer();
 			mSerializer.ContractResolver = new CamelCasePropertyNamesContractResolver();

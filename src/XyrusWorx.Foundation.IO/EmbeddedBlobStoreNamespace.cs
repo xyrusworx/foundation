@@ -51,7 +51,8 @@ namespace XyrusWorx.IO
 			throw new NotSupportedException("Removing objects from embedded BLOB stores is not supported.");
 		}
 
-		protected internal override Stream OpenStream(StringKey key, AccessMode accessMode)
+		internal Stream GetStream(StringKey key, AccessMode accessMode) => OpenStream(key, accessMode);
+		protected override Stream OpenStream(StringKey key, AccessMode accessMode)
 		{
 			if (accessMode.HasFlag(AccessMode.Write) || accessMode.HasFlag(AccessMode.Append))
 			{

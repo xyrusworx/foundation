@@ -30,9 +30,9 @@ namespace XyrusWorx.IO
 			throw new NotSupportedException("Removing objects from embedded BLOB stores is not supported.");
 		}
 
-		protected internal override Stream OpenStream(StringKey key, AccessMode accessMode)
+		protected override Stream OpenStream(StringKey key, AccessMode accessMode)
 		{
-			return mData.OpenStream(key, accessMode);
+			return mData.GetStream(key, accessMode);
 		}
 		protected override IEnumerable<StringKey> Enumerate() => mData.Keys.Select(x => x.AsKey());
 
