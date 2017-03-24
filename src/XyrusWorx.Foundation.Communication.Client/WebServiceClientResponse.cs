@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using XyrusWorx.IO;
 
-namespace XyrusWorx.Foundation.Communication.Client
+namespace XyrusWorx.Communication.Client
 {
 	[PublicAPI]
 	public class WebServiceClientResponse : Resource, IWebResult

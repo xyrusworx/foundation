@@ -49,8 +49,6 @@ namespace XyrusWorx.Runtime
 			UserDataDirectory = new FileSystemStore(userDir);
 			MachineDataDirectory = new FileSystemStore(machineDir);
 
-			Settings = new ConfigurationReaderChain();
-
 			base.DispatchMode = OperationDispatchMode.Synchronous;
 			mCurrent = this;
 		}
@@ -75,7 +73,6 @@ namespace XyrusWorx.Runtime
 		[NotNull] public AssemblyMetadata Metadata { get; }
 		[NotNull] public LogWriter Log { get; }
 		[NotNull] public CommandLineKeyValueStore CommandLine { get; }
-		[NotNull] public ConfigurationReaderChain Settings { get; }
 
 		[NotNull]
 		public CommandLineProcessor GetCommandLineProcessor() => mCommandLine;

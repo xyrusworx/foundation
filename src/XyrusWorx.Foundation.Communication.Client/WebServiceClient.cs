@@ -2,9 +2,10 @@
 using System.Net;
 using System.Text;
 using JetBrains.Annotations;
+using XyrusWorx.Communication.Client.Serialization;
 using XyrusWorx.IO;
 
-namespace XyrusWorx.Foundation.Communication.Client
+namespace XyrusWorx.Communication.Client
 {
 	[PublicAPI]
 	public class WebServiceClient
@@ -61,6 +62,6 @@ namespace XyrusWorx.Foundation.Communication.Client
 			return request;
 		}
 
-		private CommunicationStrategy CommunicationStrategy => mConfiguration.CommunicationStrategy ?? CommunicationStrategy.Default;
+		private CommunicationStrategy CommunicationStrategy => mConfiguration.CommunicationStrategy ?? new JsonCommunicationStrategy();
 	}
 }

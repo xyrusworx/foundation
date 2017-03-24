@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using XyrusWorx.Foundation.Communication.Client.Security;
+using XyrusWorx.Communication.Client.Security;
 using XyrusWorx.IO;
 
-namespace XyrusWorx.Foundation.Communication.Client
+namespace XyrusWorx.Communication.Client
 {
 	[PublicAPI]
 	public class RequestBuilder

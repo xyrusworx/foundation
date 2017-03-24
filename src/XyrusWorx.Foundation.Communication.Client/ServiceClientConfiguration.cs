@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using XyrusWorx.Foundation.Communication.Client.Security;
+using XyrusWorx.Communication.Client.Security;
 using XyrusWorx.IO;
 
-namespace XyrusWorx.Foundation.Communication.Client
+namespace XyrusWorx.Communication.Client
 {
 	[PublicAPI]
 	public class ServiceClientConfiguration

@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using XyrusWorx.IO;
 
-namespace XyrusWorx.IO
+namespace XyrusWorx.Communication.Client.Serialization
 {
 	[PublicAPI]
 	public sealed class JsonCommunicationStrategy : CommunicationStrategy

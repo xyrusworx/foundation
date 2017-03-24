@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace XyrusWorx.Foundation.Communication.Client
+namespace XyrusWorx.Communication.Client
 {
 	[PublicAPI]
 	public interface IWebResult : IResult

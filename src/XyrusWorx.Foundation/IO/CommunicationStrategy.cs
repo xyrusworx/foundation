@@ -13,20 +13,11 @@ namespace XyrusWorx.IO
 	{
 		private static Dictionary<StringKey, CommunicationStrategy> mStrategies = new Dictionary<StringKey, CommunicationStrategy>();
 
-		static CommunicationStrategy()
-		{
-			RegisterCommunicationStrategy(Default);
-		}
-		internal CommunicationStrategy() { }
-
 		[NotNull]
 		public abstract string ContentType { get; }
 
 		[NotNull] public abstract Task<object> ReadAsync([NotNull] Stream stream, [NotNull] Encoding encoding, [NotNull] Type type);
 		[NotNull] public abstract Task WriteAsync([NotNull] Stream stream, [NotNull] Encoding encoding, [CanBeNull] object obj);
-
-		[NotNull]
-		public static JsonCommunicationStrategy Default { get; } = new JsonCommunicationStrategy();
 
 		public static void RegisterCommunicationStrategy([NotNull] CommunicationStrategy strategy)
 		{

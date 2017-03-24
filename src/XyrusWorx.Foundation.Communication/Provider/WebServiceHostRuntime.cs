@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using XyrusWorx.Communication.Serialization;
 using XyrusWorx.Diagnostics;
 using XyrusWorx.IO;
 
@@ -67,7 +68,7 @@ namespace XyrusWorx.Communication.Provider
 			var statusCodeName = Enum.GetName(typeof(HttpStatusCode), (HttpStatusCode)statusCode);
 			var statusCodeDescription = statusCodeName.TryTransform(x => $"{statusCode} {Regex.Replace(x, "([A-Z])", " $1").Trim()}");
 
-			var resultWriter = mProvider.Configuration.Configuration.CommunicationStrategy ?? CommunicationStrategy.Default;
+			var resultWriter = mProvider.Configuration.Configuration.CommunicationStrategy ?? new JsonCommunicationStrategy();
 			var result = new Result
 			{
 				HasError = true,

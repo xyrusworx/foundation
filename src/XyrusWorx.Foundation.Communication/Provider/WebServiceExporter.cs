@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Routing;
+using XyrusWorx.Communication.Serialization;
 using XyrusWorx.Diagnostics;
 using XyrusWorx.IO;
 
@@ -23,7 +24,7 @@ namespace XyrusWorx.Communication.Provider
 			Provider = provider;
 			Encoding = provider.Configuration.Encoding;
 
-			DefaultCommunicationStrategy = provider.Configuration.CommunicationStrategy ?? CommunicationStrategy.Default;
+			DefaultCommunicationStrategy = provider.Configuration.CommunicationStrategy ?? new JsonCommunicationStrategy();
 		}
 
 		[NotNull] public CommunicationStrategy DefaultCommunicationStrategy { get; }

@@ -2,7 +2,7 @@
 using System.Net;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.Foundation.Communication.Client.Security
+namespace XyrusWorx.Communication.Client.Security
 {
 	[PublicAPI]
 	public abstract class ServiceClientAuthentication
