@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="..\XyrusWorx.Foundation.props" />
+	<PropertyGroup>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>XyrusWorx.Foundation.Threading</AssemblyName>
+		<AssemblyTitle>XyrusWorx Foundation Threading Package</AssemblyTitle>
+		<Description>This package contains utilities and solutions to orchestrate and coordinate large operations and parallel running tasks.</Description>
+		<TargetFrameworks>net462;netstandard1.6</TargetFrameworks>
+		<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+		<GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+		<GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+		<GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
+		<GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+		<GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
+		<GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+		<GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
+		<GenerateAssemblyInformationalVersionAttribute>true</GenerateAssemblyInformationalVersionAttribute>
+		<GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="**\*.cs" Exclude="obj/**" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
+	</ItemGroup>
+	<PropertyGroup Label="Configuration">
+		<RootNamespace>XyrusWorx.Threading</RootNamespace>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+	</PropertyGroup>
+</Project>
