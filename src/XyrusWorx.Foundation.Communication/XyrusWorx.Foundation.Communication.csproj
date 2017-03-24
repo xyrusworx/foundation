@@ -7,7 +7,7 @@
 		<AssemblyName>XyrusWorx.Foundation.Communication</AssemblyName>
 		<AssemblyTitle>XyrusWorx Foundation Communication Package</AssemblyTitle>
 		<Description>This package contains additional communication and Web API services for XyrusWorx applications</Description>
-		<TargetFrameworks>net462;netstandard1.6</TargetFrameworks>
+		<TargetFrameworks>net46;net461;net462;netstandard1.6</TargetFrameworks>
 		<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
 		<GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
 		<GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>

@@ -7,8 +7,8 @@
     <AssemblyName>XyrusWorx.Foundation.Communication.Client</AssemblyName>
     <AssemblyTitle>XyrusWorx Foundation Communication Client Package</AssemblyTitle>
     <Description>This package contains additional communication client services for XyrusWorx applications</Description>
-    <TargetFrameworks>net462;netstandard1.6</TargetFrameworks>
-	  <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <TargetFrameworks>net451;net452;net46;net461;net462;netstandard1.6</TargetFrameworks>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>

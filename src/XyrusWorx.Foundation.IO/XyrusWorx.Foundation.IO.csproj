@@ -7,7 +7,7 @@
 		<AssemblyName>XyrusWorx.Foundation.IO</AssemblyName>
 		<AssemblyTitle>XyrusWorx Foundation I/O Package</AssemblyTitle>
 		<Description>This package extends the XyrusWorx foundation with additional I/O helpers</Description>
-		<TargetFrameworks>net462;netstandard1.6</TargetFrameworks>
+		<TargetFrameworks>net451;net452;net46;net461;net462;netstandard1.6</TargetFrameworks>
 		<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
 		<GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
 		<GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>

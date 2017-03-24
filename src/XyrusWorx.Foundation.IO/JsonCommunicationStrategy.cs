@@ -39,7 +39,7 @@ namespace XyrusWorx.IO
 
 			if (obj == null)
 			{
-				return Task.CompletedTask;
+				return Task.Run(() => {});
 			}
 
 			using (var writer = new StringWriter())

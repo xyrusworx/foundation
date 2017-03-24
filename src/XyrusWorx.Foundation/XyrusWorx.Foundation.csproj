@@ -7,7 +7,7 @@
     <AssemblyName>XyrusWorx.Foundation</AssemblyName>
     <AssemblyTitle>XyrusWorx Foundation Core Package</AssemblyTitle>
     <Description>This package is the common foundation of all XyrusWorx applications and libraries.</Description>
-    <TargetFrameworks>net462;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net451;net452;net46;net461;net462;netstandard1.6</TargetFrameworks>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>

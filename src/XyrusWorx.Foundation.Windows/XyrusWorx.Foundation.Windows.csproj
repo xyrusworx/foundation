@@ -7,7 +7,7 @@
     <AssemblyName>XyrusWorx.Foundation.Windows</AssemblyName>
     <AssemblyTitle>XyrusWorx Foundation Windows Application Runtime</AssemblyTitle>
     <Description>This package contains platform-specific classes and utilities for Microsoft Windows on top of XyrusWorx Foundation</Description>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net46;net461;net462</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
@@ -31,7 +31,7 @@
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />

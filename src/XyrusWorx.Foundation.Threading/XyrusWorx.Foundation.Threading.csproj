@@ -7,7 +7,7 @@
 		<AssemblyName>XyrusWorx.Foundation.Threading</AssemblyName>
 		<AssemblyTitle>XyrusWorx Foundation Threading Package</AssemblyTitle>
 		<Description>This package contains utilities and solutions to orchestrate and coordinate large operations and parallel running tasks.</Description>
-		<TargetFrameworks>net462;netstandard1.6</TargetFrameworks>
+		<TargetFrameworks>net46;net461;net462;netstandard1.6</TargetFrameworks>
 		<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
 		<GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
 		<GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
