@@ -1,8 +1,7 @@
+using JetBrains.Annotations;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace XyrusWorx.Runtime
 {
@@ -17,7 +16,7 @@ namespace XyrusWorx.Runtime
 		}
 
 		[NotNull]
-		public string ModuleName => Process.GetCurrentProcess().MainModule.ModuleName;
+		public string ModuleName => (mAssembly?.Location).TryTransform(Path.GetFileName);
 
 		[CanBeNull] public string AssemblyName => mAssembly?.FullName;
 

@@ -24,7 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
-    <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <RootNamespace>XyrusWorx</RootNamespace>
