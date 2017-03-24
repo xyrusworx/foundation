@@ -23,6 +23,11 @@
 		<Compile Include="**\*.cs" Exclude="obj/**" />
 	</ItemGroup>
 	<ItemGroup>
+	  <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+	  <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+	  <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
 	</ItemGroup>
 	<PropertyGroup Label="Configuration">

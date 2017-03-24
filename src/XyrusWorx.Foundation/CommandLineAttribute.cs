@@ -87,7 +87,7 @@ namespace XyrusWorx
 			{
 				var elementType = targetType.GetElementType().GetTypeInfo();
 
-				return new ArrayList().ToArray(elementType.UnderlyingSystemType);
+				return new UntypedArrayList().ToArray(elementType.UnderlyingSystemType);
 			}
 
 			return targetType.IsValueType ? Activator.CreateInstance(targetType.UnderlyingSystemType) : null;
@@ -97,7 +97,7 @@ namespace XyrusWorx
 			if (targetType.IsArray)
 			{
 				var elementType = targetType.GetElementType().GetTypeInfo();
-				var resultingElements = new ArrayList();
+				var resultingElements = new UntypedArrayList();
 
 				if (value is IEnumerable)
 				{

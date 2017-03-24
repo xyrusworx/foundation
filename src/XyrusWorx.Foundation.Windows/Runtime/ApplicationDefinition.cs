@@ -109,15 +109,17 @@ namespace XyrusWorx.Windows.Runtime
 			if (specificApplication != null)
 			{
 				specificApplication.Definition = this;
-				specificApplication.DispatchMode = OperationDispatchMode.BackgroundThread;
 
 				ServiceLocator.Default.Register(this);
 			}
 
 			ViewModel.GlobalPropertyChanged += OnGlobalPropertyChanged;
 
+			var relay = new RelayOperation(() => mApplication?.Run());
+			relay.DispatchMode = OperationDispatchMode.BackgroundThread;
+
 			mRunningScope.Enter();
-			mApplication?.Run();
+			relay.Run();
 			MainWindow?.Show();
 		}
 		protected override void OnExit(ExitEventArgs e)

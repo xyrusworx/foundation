@@ -30,10 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
   <PropertyGroup Label="Configuration">
     <RootNamespace>XyrusWorx.Extensibility</RootNamespace>
   </PropertyGroup>

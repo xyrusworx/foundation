@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
+    <ProjectReference Include="..\XyrusWorx.Foundation.Threading\XyrusWorx.Foundation.Threading.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Expression.Interaction">

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation", "XyrusWorx.Foundation\XyrusWorx.Foundation.csproj", "{8C7731D3-BEC7-475E-8078-5260FC1A7998}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{E480D2D1-3CCE-4700-94C8-C0ECA17A93FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.Windows", "XyrusWorx.Foundation.Windows\XyrusWorx.Foundation.Windows.csproj", "{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.Threading", "XyrusWorx.Foundation.Threading\XyrusWorx.Foundation.Threading.csproj", "{FD2BC380-38CA-454E-8582-D553DBAE8957}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +133,22 @@ Global
 		{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01}.Release|x64.Build.0 = Release|Any CPU
 		{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01}.Release|x86.ActiveCfg = Release|Any CPU
 		{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01}.Release|x86.Build.0 = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|ARM.Build.0 = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|x64.Build.0 = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Debug|x86.Build.0 = Debug|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|ARM.Build.0 = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|x64.ActiveCfg = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|x64.Build.0 = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD2BC380-38CA-454E-8582-D553DBAE8957}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,5 +160,6 @@ Global
 		{05C68D9E-71B6-44B1-84FE-CC04E660F7B6} = {BA27AD86-033E-4EE2-A50B-871D39788B47}
 		{02E6E7A2-8977-41AB-914E-B2F6D64301C8} = {BA27AD86-033E-4EE2-A50B-871D39788B47}
 		{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01} = {E480D2D1-3CCE-4700-94C8-C0ECA17A93FF}
+		{FD2BC380-38CA-454E-8582-D553DBAE8957} = {0A2C40B9-0385-4657-BD29-7F908936E3C9}
 	EndGlobalSection
 EndGlobal

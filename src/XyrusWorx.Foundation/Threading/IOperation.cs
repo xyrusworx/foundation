@@ -1,6 +1,5 @@
-using System;
-using System.Threading;
 using JetBrains.Annotations;
+using System.Threading;
 
 namespace XyrusWorx.Threading
 {
@@ -18,6 +17,5 @@ namespace XyrusWorx.Threading
 
 		[NotNull] IResult ExecutionResult { get; }
 		[NotNull] IWaitHandler WaitHandler { get; set; }
-		[NotNull] IReadonlyScope Scope { get; }
 	}
 }
