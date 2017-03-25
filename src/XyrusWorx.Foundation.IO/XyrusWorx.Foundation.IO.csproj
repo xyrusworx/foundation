@@ -25,7 +25,7 @@
 		<EmbeddedResource Include="compiler\resources\**\*" Exclude="obj/**" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+		<PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All" />
 		<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
 		<PackageReference Include="System.IO.Compression" Version="4.3.0" />
 	</ItemGroup>

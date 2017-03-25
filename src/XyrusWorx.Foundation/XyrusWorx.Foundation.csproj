@@ -23,7 +23,8 @@
     <Compile Include="**\*.cs" Exclude="obj/**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All">
+	</PackageReference>
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <RootNamespace>XyrusWorx</RootNamespace>
