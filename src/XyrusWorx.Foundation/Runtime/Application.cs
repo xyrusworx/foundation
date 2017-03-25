@@ -62,6 +62,7 @@ namespace XyrusWorx.Runtime
 
 			mCurrent = this;
 			mResult = Result.Success;
+			mWaitHandler = new RuntimeWaitHandler();
 		}
 
 		public IWaitHandler WaitHandler
