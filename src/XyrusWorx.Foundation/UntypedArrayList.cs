@@ -1,9 +1,7 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using JetBrains.Annotations;
 
 namespace XyrusWorx
 {
@@ -68,7 +66,12 @@ namespace XyrusWorx
 				throw new ArgumentNullException(nameof(elementType));
 			}
 
-			return mElements.Where(x => x != null && elementType.GetTypeInfo().IsInstanceOfType(x)).ToArray();
+			var source = (IList) mElements;
+			var target = Array.CreateInstance(elementType, mElements.Count);
+
+			source.CopyTo(target, 0);
+
+			return target;
 		}
 	}
 }
