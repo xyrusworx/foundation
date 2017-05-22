@@ -25,7 +25,7 @@ namespace XyrusWorx
 			mModelType = modelType;
 			mLog = log;
 
-			CollectProperties();
+			CollectProperties(mModelType);
 		}
 
 		public IEnumerable<StringKey> GetKnownKeys() => mProperties.Select(x => x.Item1.GetKey()).Where(x => !x.IsEmpty);
@@ -76,9 +76,9 @@ namespace XyrusWorx
 			}
 		}
 
-		private void CollectProperties()
+		private void CollectProperties(Type type)
 		{
-			var allProperties = mModelType.GetTypeInfo().DeclaredProperties.Where(x => !x.GetMethod.IsStatic && x.CanWrite);
+			var allProperties = type.GetTypeInfo().DeclaredProperties.Where(x => !x.GetMethod.IsStatic && x.CanWrite);
 
 			foreach (var property in allProperties)
 			{
@@ -92,6 +92,13 @@ namespace XyrusWorx
 						break;
 					}
 				}
+			}
+
+			var typeInfo = type.GetTypeInfo();
+
+			if (typeInfo.BaseType != null && typeInfo.BaseType != typeof(object))
+			{
+				CollectProperties(typeInfo.BaseType);
 			}
 		}
 	}
