@@ -203,8 +203,9 @@ namespace XyrusWorx.Threading
 				mIsCompleted = false;
 				mResult = Result.Success;
 				mIsInitializing = true;
-				SetProgress(0);
 			}
+
+			SetProgress(0);
 
 			try
 			{
@@ -227,7 +228,7 @@ namespace XyrusWorx.Threading
 							mScope.Enter();
 						}
 					}
-					
+
 					Started?.Invoke(this, new EventArgs());
 					mResult = Execute((CancellationToken)state);
 				}
@@ -263,28 +264,33 @@ namespace XyrusWorx.Threading
 			}
 			finally
 			{
-				lock (mClosingLock)
+				try
 				{
-					try
+					lock (mClosingLock)
 					{
 						mIsInitializing = false;
 						mIsCompleted = true;
 						mWasCancelled = ((CancellationToken)state).IsCancellationRequested || cancelException;
-						Cleanup(mWasCancelled);
 					}
-					finally
-					{
-						if (mWasCancelled)
-						{
-							mResult = Result.CreateError(new OperationCanceledException());
-						}
 
-						mScope.Leave();
-						Ended?.Invoke(this, new EventArgs());
-						SetProgress(mWasCancelled ? Progress : 1);
-					}
+					Cleanup(mWasCancelled);
 				}
-				
+				finally
+				{
+					if (mWasCancelled)
+					{
+						mResult = Result.CreateError(new OperationCanceledException());
+					}
+
+					lock (mClosingLock)
+					{
+						mScope.Leave();
+					}
+
+					Ended?.Invoke(this, new EventArgs());
+					SetProgress(mWasCancelled ? Progress : 1);
+				}
+
 			}
 		}
 		private bool RaiseExceptionEvent(Exception exception)
