@@ -16,19 +16,9 @@ namespace XyrusWorx
 				throw new ArgumentNullException(nameof(segments));
 			}
 
-			if (segments.Length == 0)
-			{
-				throw new ArgumentException("Segment array can't be empty.", nameof(segments));
-			}
-
-			if (string.IsNullOrEmpty(segments[0]))
-			{
-				throw new ArgumentException("First segment in array can't be empty.", nameof(segments));
-			}
-
 			mSegments = segments.Where(x => !string.IsNullOrEmpty(x)).Select(x => new StringKey(x)).ToArray();
 		}
-		public StringKeySequence(string rootSegment, params string[] pathSegments) : this(new[] { rootSegment }.Concat(pathSegments ?? new string[0]).ToArray())
+		public StringKeySequence(string rootSegment, params string[] pathSegments) : this(new[] { rootSegment }.Concat(pathSegments ?? new string[0]).Where(x => !string.IsNullOrEmpty(x)).ToArray())
 		{
 		}
 
@@ -39,19 +29,9 @@ namespace XyrusWorx
 				throw new ArgumentNullException(nameof(segments));
 			}
 
-			if (segments.Length == 0)
-			{
-				throw new ArgumentException("Segment array can't be empty.", nameof(segments));
-			}
-
-			if (segments[0].IsEmpty)
-			{
-				throw new ArgumentException("First segment in array can't be empty.", nameof(segments));
-			}
-
 			mSegments = segments.Where(x => !x.IsEmpty).ToArray();
 		}
-		public StringKeySequence(StringKey rootSegment, params StringKey[] pathSegments) : this(new[] { rootSegment }.Concat(pathSegments ?? new StringKey[0]).ToArray())
+		public StringKeySequence(StringKey rootSegment, params StringKey[] pathSegments) : this(new[] { rootSegment }.Concat(pathSegments ?? new StringKey[0]).Where(x => !string.IsNullOrEmpty(x)).ToArray())
 		{
 		}
 
