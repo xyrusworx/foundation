@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\XyrusWorx.Foundation.props" />
+  <Import Project="..\..\package.props" />
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyName>XyrusWorx.Foundation.Data</AssemblyName>
-    <AssemblyTitle>XyrusWorx Foundation Data Services Package</AssemblyTitle>
-    <Description>This package contains additional data access and -transformation services for XyrusWorx applications</Description>
+    <AssemblyName>XyrusWorx.Foundation.Extensibility</AssemblyName>
+    <AssemblyTitle>XyrusWorx Foundation Extensibility Package</AssemblyTitle>
+    <Description>This package is an extension to the foundation package for XyrusWorx applications, which allows the integration of external application components</Description>
     <TargetFrameworks>net451;net452;net46;net461;net462;netstandard1.6</TargetFrameworks>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
@@ -21,27 +21,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" Exclude="obj/**" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
+    <EmbeddedResource Include="**\*.resx" Exclude="obj/**" />
+    <EmbeddedResource Include="compiler\resources\**\*" Exclude="obj/**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations">
       <Version>10.4.0</Version>
     </PackageReference>
-    <PackageReference Include="System.Data.Common">
-      <Version>4.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Dynamic.Runtime">
-      <Version>4.3.0</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Configuration">
-    <RootNamespace>XyrusWorx.Data</RootNamespace>
+    <RootNamespace>XyrusWorx.Extensibility</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>

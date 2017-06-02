@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+	<Target Name="Clean">
+		<RemoveDir Directories="$(OutDir)" />
+		<MakeDir Directories="$(OutDir)" />
+	</Target>
+	
+	<Target Name="_InitializeStagingDirectories">
+		<MakeDir Directories="$(PackageOutDir)\build" />
+		<MakeDir Directories="$(PackageOutDir)\content" />
+		<MakeDir Directories="$(PackageOutDir)\tools" />
+		<MakeDir Directories="$(StagingDir)\spec" />
+	</Target>
+	
+	<Target Name="Build" DependsOnTargets="_InitializeStagingDirectories">
+		<PropertyGroup>
+			<NuSpecTemplatePath>Package.xml</NuSpecTemplatePath>
+			<NuSpecPath>$(StagingDir)\spec\$(PackageName).nuspec</NuSpecPath>
+		</PropertyGroup>
+		
+		<Copy SourceFiles="@(Build)" DestinationFiles="@(Build->'$(PackageOutDir)\build\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(Content)" DestinationFiles="@(Content->'$(PackageOutDir)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(Tools)" DestinationFiles="@(Tools->'$(PackageOutDir)\tools\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(None)" DestinationFiles="@(None->'$(PackageOutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="$(NuSpecTemplatePath)" DestinationFiles="$(NuSpecPath)" />
+		
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$id\$" ReplacementText="$(PackageName)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$version\$" ReplacementText="$(PackageVersion)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$title\$" ReplacementText="$(PackageTitle)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$authors\$" ReplacementText="$(Authors)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$company\$" ReplacementText="$(Company)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$description\$" ReplacementText="$(PackageDescription)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$copyright\$" ReplacementText="$(Copyright)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$requireLicenseAcceptance\$" ReplacementText="$(PackageRequireLicenseAcceptance)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$licenseUrl\$" ReplacementText="$(PackageLicenseUrl)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$projectUrl\$" ReplacementText="$(PackageProjectUrl)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$iconUrl\$" ReplacementText="$(PackageIconUrl)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$configuration\$" ReplacementText="$(Configuration)" />
+	</Target>
+	
+	<Target Name="Restore" />
+	
+	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+	
+	<Target Name="Pack" DependsOnTargets="Rebuild">
+		<Exec Command="nuget pack -Verbosity quiet -NonInteractive -OutputDirectory &quot;$(OutDir)&quot; -BasePath &quot;$(PackageOutDir)&quot; &quot;$(NuSpecPath)&quot;">
+			<Output PropertyName="NugetPackExitCode" TaskParameter="ExitCode" />
+		</Exec>
+		<Error Condition="$(NugetPackExitCode) != 0" Text="Package creation failed with exit code $(NugetPackExitCode)." />
+	</Target>
+</Project>

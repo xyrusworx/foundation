@@ -91,8 +91,8 @@ namespace XyrusWorx.Windows.Runtime
 			Operation.GlobalThreadException += OnGlobalThreadException;
 			Dispatcher.UnhandledException += OnUnhandledException;
 
-			mViewModel = ViewModelType != null ? (ViewModel) Activator.CreateInstance(ViewModelType) : null;
 			mApplication = ControllerType != null ? (IOperation)Activator.CreateInstance(ControllerType) : null;
+			mViewModel = ViewModelType != null ? (ViewModel)Activator.CreateInstance(ViewModelType) : null;
 			MainWindow = ViewType != null ? (Window) Activator.CreateInstance(ViewType) : null;
 			
 			if (MainWindow != null)

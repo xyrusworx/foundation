@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation", "XyrusWorx.Foundation\XyrusWorx.Foundation.csproj", "{8C7731D3-BEC7-475E-8078-5260FC1A7998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation", "lib\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj", "{8C7731D3-BEC7-475E-8078-5260FC1A7998}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Extensibility", "XyrusWorx.Foundation.Extensibility\XyrusWorx.Foundation.Extensibility.csproj", "{E69DFB60-8B02-4050-8B25-9A7E399F3199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Extensibility", "lib\XyrusWorx.Foundation.Extensibility\XyrusWorx.Foundation.Extensibility.csproj", "{E69DFB60-8B02-4050-8B25-9A7E399F3199}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Data", "XyrusWorx.Foundation.Data\XyrusWorx.Foundation.Data.csproj", "{5E00AC9B-20A1-4DE0-9532-80FA1894EA74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Data", "lib\XyrusWorx.Foundation.Data\XyrusWorx.Foundation.Data.csproj", "{5E00AC9B-20A1-4DE0-9532-80FA1894EA74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Communication", "XyrusWorx.Foundation.Communication\XyrusWorx.Foundation.Communication.csproj", "{05C68D9E-71B6-44B1-84FE-CC04E660F7B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Communication", "lib\XyrusWorx.Foundation.Communication\XyrusWorx.Foundation.Communication.csproj", "{05C68D9E-71B6-44B1-84FE-CC04E660F7B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Communication.Client", "XyrusWorx.Foundation.Communication.Client\XyrusWorx.Foundation.Communication.Client.csproj", "{02E6E7A2-8977-41AB-914E-B2F6D64301C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XyrusWorx.Foundation.Communication.Client", "lib\XyrusWorx.Foundation.Communication.Client\XyrusWorx.Foundation.Communication.Client.csproj", "{02E6E7A2-8977-41AB-914E-B2F6D64301C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0A2C40B9-0385-4657-BD29-7F908936E3C9}"
 EndProject
@@ -21,11 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{98C0F91E-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{E480D2D1-3CCE-4700-94C8-C0ECA17A93FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.Windows", "XyrusWorx.Foundation.Windows\XyrusWorx.Foundation.Windows.csproj", "{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.Windows", "lib\XyrusWorx.Foundation.Windows\XyrusWorx.Foundation.Windows.csproj", "{8CBE5649-CAAC-439E-B6AB-FAC44CFCFA01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.Threading", "XyrusWorx.Foundation.Threading\XyrusWorx.Foundation.Threading.csproj", "{FD2BC380-38CA-454E-8582-D553DBAE8957}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.Threading", "lib\XyrusWorx.Foundation.Threading\XyrusWorx.Foundation.Threading.csproj", "{FD2BC380-38CA-454E-8582-D553DBAE8957}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.IO", "XyrusWorx.Foundation.IO\XyrusWorx.Foundation.IO.csproj", "{7663C17D-7817-4FBA-A59B-15C70CD27E5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XyrusWorx.Foundation.IO", "lib\XyrusWorx.Foundation.IO\XyrusWorx.Foundation.IO.csproj", "{7663C17D-7817-4FBA-A59B-15C70CD27E5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

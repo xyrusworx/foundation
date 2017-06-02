@@ -81,6 +81,39 @@ namespace XyrusWorx.Runtime
 			mServices.AddOrUpdate(handle, handle);
 		}
 
+		public void RegisterSingleton<T>() => RegisterSingleton(typeof(T));
+		public void RegisterSingleton([NotNull] Type type)
+		{
+			if (type == null)
+			{
+				throw new ArgumentNullException(nameof(type));
+			}
+
+			var instance = CreateInstance(type, null);
+			var handle = new ServiceHandle(type, instance);
+
+			mServices.AddOrUpdate(handle, handle);
+		}
+
+		public void RegisterSingleton<TInterface, TImplementation>() => RegisterSingleton(typeof(TInterface), typeof(TImplementation));
+		public void RegisterSingleton([NotNull] Type interfaceType, [NotNull] Type implementationType)
+		{
+			if (interfaceType == null)
+			{
+				throw new ArgumentNullException(nameof(interfaceType));
+			}
+
+			if (implementationType == null)
+			{
+				throw new ArgumentNullException(nameof(implementationType));
+			}
+
+			var instance = CreateInstance(implementationType, null);
+			var handle = new ServiceHandle(interfaceType, instance);
+
+			mServices.AddOrUpdate(handle, handle);
+		}
+
 		public T Resolve<T>() => (T)Resolve(typeof(T));
 		public object Resolve(Type type) => Resolve(type, null);
 
@@ -156,7 +189,11 @@ namespace XyrusWorx.Runtime
 				return handle.Instance;
 			}
 
-			var typeInfo = handle.ConcreteType.GetTypeInfo();
+			return CreateInstance(handle.ConcreteType, path);
+		}
+		private object CreateInstance(Type type, Type[] path)
+		{
+			var typeInfo = type.GetTypeInfo();
 
 			var suitableConstructor = typeInfo
 				.DeclaredConstructors
