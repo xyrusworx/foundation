@@ -5,8 +5,8 @@
     <Copyright>Copyright (c) 2014-2017 XyrusWorx. All rights reserved.</Copyright>
     <Authors>$(Company)</Authors>
     <PackageId>$(AssemblyName)</PackageId>
-    <PackageVersion>2.3.6</PackageVersion>
-    <PackageBaseVersion>2.3.6</PackageBaseVersion>
+    <PackageVersion>2.4.1</PackageVersion>
+    <PackageBaseVersion>2.4.1</PackageBaseVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://xyrus-worx.org/license/mit</PackageLicenseUrl>
     <PackageProjectUrl>http://xyrus-worx.org</PackageProjectUrl>
