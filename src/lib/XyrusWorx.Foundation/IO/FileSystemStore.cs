@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace XyrusWorx.IO
 {
 	[PublicAPI]
-	public sealed class FileSystemStore : BlobStore
+	public class FileSystemStore : BlobStore
 	{
 		private readonly string mDirectoryName;
 		private readonly Encoding mEncoding;
