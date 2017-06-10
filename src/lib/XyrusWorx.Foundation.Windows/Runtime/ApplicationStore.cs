@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using JetBrains.Annotations;
+using XyrusWorx.IO;
 
-namespace XyrusWorx.IO
+namespace XyrusWorx.Windows.Runtime
 {
 	[PublicAPI]
 	public sealed class ApplicationStore
@@ -21,7 +22,17 @@ namespace XyrusWorx.IO
 
 			// ReSharper disable once AssignNullToNotNullAttribute
 			var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-			var productName = versionInfo.ProductName.NormalizeNull() ?? (Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).GetName().Name;
+			var productName = versionInfo.ProductName.NormalizeNull() ?? (Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).GetName().Name.NormalizeNull() ?? "Common";
+
+			foreach (var c in Path.GetInvalidFileNameChars())
+			{
+				productName = productName.Replace($"{c}", "");
+			}
+
+			if (string.IsNullOrEmpty(productName))
+			{
+				productName = "_";
+			}
 
 			mProgramData = new FileSystemStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), mApplicationGroupKey, productName));
 			mLocalAppData = new FileSystemStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), mApplicationGroupKey, productName));

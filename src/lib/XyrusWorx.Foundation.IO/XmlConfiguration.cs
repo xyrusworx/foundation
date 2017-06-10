@@ -115,6 +115,8 @@ namespace XyrusWorx.IO
 		}
 		private void SaveDocument(XDocument document)
 		{
+			mStorage.Erase(mContainerKey); // empty text file before saving
+
 			using (var stream = mStorage.Open(mContainerKey).AsText().Write())
 			{
 				document.Save(stream, SaveOptions.None);
