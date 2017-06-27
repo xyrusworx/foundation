@@ -7,7 +7,7 @@ namespace XyrusWorx.Diagnostics
 	[PublicAPI]
 	public abstract class LogWriter : MessageDispatcher<LogMessage>, ILogWriter
 	{
-		private LogVerbosity mVerbosity;
+		private LogVerbosity? mVerbosity;
 
 		public LogFilter Filter { get; set; }
 
@@ -15,18 +15,24 @@ namespace XyrusWorx.Diagnostics
 		{
 			get
 			{
+				if (mVerbosity != null)
+				{
+					return mVerbosity.Value;
+				}
+
 				var parentLog = Parent as ILogWriter;
 				if (parentLog != null)
 				{
 					return parentLog.Verbosity;
 				}
 
-				return mVerbosity;
+				return LogVerbosity.Normal;
 			}
-			set
-			{
-				mVerbosity = value;
-			}
+			set { mVerbosity = value; }
+		}
+		public void ResetVerbosity()
+		{
+			mVerbosity = null;
 		}
 
 		public void Write(string message, LogMessageClass messageClass = LogMessageClass.Information)

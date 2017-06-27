@@ -13,6 +13,7 @@ namespace XyrusWorx.Diagnostics
 
 		void Flush();
 		void Write(string message, LogMessageClass messageClass = LogMessageClass.Information);
+		void ResetVerbosity();
 
 		bool IsFlushDelayed { get; set; }
 		TimeSpan FlushInterval { get; set; }

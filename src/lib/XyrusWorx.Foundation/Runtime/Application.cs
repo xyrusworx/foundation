@@ -39,7 +39,7 @@ namespace XyrusWorx.Runtime
 #endif
 
 			Log = new NullLogWriter();
-			CommandLine = new CommandLineKeyValueStore();
+			CommandLine = new CommandLineKeyValueStore(Environment.GetCommandLineArgs());
 			Metadata = new AssemblyMetadata(assembly);
 			Context = new ApplicationExecutionContext();
 
