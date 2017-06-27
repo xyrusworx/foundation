@@ -44,6 +44,9 @@ namespace XyrusWorx.Runtime
 
 		protected sealed override IResult InitializeApplication()
 		{
+			Log.LinkedDispatchers.Add(new LightConsoleWriter());
+			Log.Verbosity = Verbosity;
+
 			var result = InitializeOverride();
 			if (result.HasError)
 			{
@@ -61,6 +64,9 @@ namespace XyrusWorx.Runtime
 		{
 			return Result.Success;
 		}
+
+		[CommandLineProperty("verbosity")]
+		public LogVerbosity Verbosity { get; set; }
 
 		[CommandLineSwitch("nologo")]
 		public bool NoLogo { get; set; }
