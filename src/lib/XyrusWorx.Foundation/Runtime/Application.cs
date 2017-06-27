@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace XyrusWorx.Runtime
 #endif
 
 			Log = new NullLogWriter();
-			CommandLine = new CommandLineKeyValueStore(Environment.GetCommandLineArgs());
+			CommandLine = new CommandLineKeyValueStore(Environment.GetCommandLineArgs().Skip(1).ToArray());
 			Metadata = new AssemblyMetadata(assembly);
 			Context = new ApplicationExecutionContext();
 
