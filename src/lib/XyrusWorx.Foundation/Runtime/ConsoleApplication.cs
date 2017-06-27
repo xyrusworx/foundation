@@ -50,7 +50,7 @@ namespace XyrusWorx.Runtime
 				return result;
 			}
 
-			if (ShowBanner)
+			if (!NoLogo)
 			{
 				WriteBanner();
 			}
@@ -62,8 +62,11 @@ namespace XyrusWorx.Runtime
 			return Result.Success;
 		}
 
-		public bool ShowBanner { get; set; } = true;
-		public bool Interactive { get; set; } = true;
+		[CommandLineSwitch("nologo")]
+		public bool NoLogo { get; set; }
+
+		[CommandLineSwitch("confirm-exit")]
+		public bool ConfirmExit { get; set; }
 
 		[NotNull]
 		public IScope WithColor(ConsoleColor? foreground = null, ConsoleColor? background = null)
@@ -151,7 +154,7 @@ namespace XyrusWorx.Runtime
 			}
 			finally
 			{
-				if (Interactive)
+				if (ConfirmExit)
 				{
 					WaitForKey();
 				}
