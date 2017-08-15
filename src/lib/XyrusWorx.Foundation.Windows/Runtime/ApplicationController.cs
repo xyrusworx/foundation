@@ -23,17 +23,17 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public ApplicationDefinition Definition { get; internal set; }
+		public IApplicationRuntime Runtime { get; internal set; }
 
 		[NotNull]
-		public IMessageBox Dialog => new WindowsMessageBox(Definition);
+		public IMessageBox Dialog => new WindowsMessageBox(Runtime);
 
 		[ContractAnnotation("=> halt")]
 		public void Shutdown(int exitCode)
 		{
 			try
 			{
-				Definition.Dispatcher.Invoke(() => Definition.Shutdown(1));
+				Runtime.GetDispatcher()?.Invoke(() => Runtime.Shutdown(1));
 			}
 			catch
 			{
@@ -43,17 +43,16 @@ namespace XyrusWorx.Windows.Runtime
 			Environment.Exit(1);
 		}
 
-		[NotNull] public Window GetView() => Definition?.MainWindow;
-		[NotNull] public ViewModel GetViewModel() => Definition?.ViewModel;
+		public FrameworkElement GetView() => Runtime?.View;
+		public ViewModel GetViewModel() => Runtime?.ViewModel;
 
-		[NotNull] public T GetView<T>() where T : Window => GetView().CastTo<T>().AssertNotNull();
-		[NotNull] public T GetViewModel<T>() where T: class => GetViewModel().CastTo<T>().AssertNotNull();
+		public T GetView<T>() where T : FrameworkElement => GetView().CastTo<T>();
+		public T GetViewModel<T>() where T: class => GetViewModel().CastTo<T>();
 
 		public virtual bool HandleException(Exception exception) => false;
 
 		protected sealed override IResult InitializeApplication()
 		{
-			ServiceLocator.Default.Register(Definition.Dispatcher);
 			OnInitialize();
 			return Result.Success;
 		}

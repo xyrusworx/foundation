@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using JetBrains.Annotations;
 
 namespace XyrusWorx.Windows.Runtime
@@ -111,23 +112,35 @@ namespace XyrusWorx.Windows.Runtime
 				throw new ArgumentNullException(nameof(application));
 			}
 
-			return definition.Owner(application.Definition.MainWindow);
+			var mainWindow = application.Runtime.View as Window;
+			if (mainWindow != null)
+			{
+				return definition.Owner(mainWindow);
+			}
+
+			return definition;
 		}
 
 		[NotNull]
-		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] ApplicationDefinition applicationDefinition)
+		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] IApplicationRuntime runtime)
 		{
 			if (definition == null)
 			{
 				throw new ArgumentNullException(nameof(definition));
 			}
 
-			if (applicationDefinition == null)
+			if (runtime == null)
 			{
-				throw new ArgumentNullException(nameof(applicationDefinition));
+				throw new ArgumentNullException(nameof(runtime));
 			}
 
-			return definition.Owner(applicationDefinition.MainWindow);
+			var mainWindow = runtime.View as Window;
+			if (mainWindow != null)
+			{
+				return definition.Owner(mainWindow);
+			}
+
+			return definition;
 		}
 	}
 }

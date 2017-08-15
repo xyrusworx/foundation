@@ -12,7 +12,7 @@ using Application = System.Windows.Application;
 namespace XyrusWorx.Windows.Runtime
 {
 	[PublicAPI]
-	public class ApplicationDefinition : Application
+	public class ApplicationDefinition : Application, IApplicationRuntime
 	{
 		private readonly Scope mRunningScope;
 
@@ -22,6 +22,7 @@ namespace XyrusWorx.Windows.Runtime
 
 		private IOperation mApplication;
 		private ViewModel mViewModel;
+		private ApplicationController mApplicationController;
 
 		public ApplicationDefinition()
 		{
@@ -108,9 +109,10 @@ namespace XyrusWorx.Windows.Runtime
 			var specificApplication = mApplication.CastTo<ApplicationController>();
 			if (specificApplication != null)
 			{
-				specificApplication.Definition = this;
+				specificApplication.Runtime = this;
+				mApplicationController = specificApplication;
 
-				ServiceLocator.Default.Register(this);
+				ServiceLocator.Default.Register<IApplicationRuntime>(this);
 			}
 
 			ViewModel.GlobalPropertyChanged += OnGlobalPropertyChanged;
@@ -140,7 +142,14 @@ namespace XyrusWorx.Windows.Runtime
 			MainWindow = null;
 		}
 
-		internal ViewModel ViewModel => mViewModel;
+		ViewModel IApplicationRuntime.ViewModel => mViewModel;
+		FrameworkElement IApplicationRuntime.View => MainWindow;
+		ApplicationController IApplicationRuntime.Controller => mApplicationController;
+
+		Dispatcher IApplicationRuntime.GetDispatcher()
+		{
+			return Dispatcher;
+		}
 
 		private void OnGlobalThreadException(object sender, OperationUnhandledExceptionEventArgs e)
 		{

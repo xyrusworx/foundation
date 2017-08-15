@@ -8,7 +8,7 @@ namespace XyrusWorx.Windows.Runtime
 	[PublicAPI]
 	public class WindowsMessageBox : IMessageBox, IAsyncMessageBox
 	{
-		private readonly ApplicationDefinition mApplication;
+		private readonly IApplicationRuntime mApplication;
 
 		private string mTitle;
 		private string mMessage;
@@ -18,7 +18,7 @@ namespace XyrusWorx.Windows.Runtime
 		public WindowsMessageBox()
 		{
 		}
-		internal WindowsMessageBox([CanBeNull] ApplicationDefinition application) : this()
+		internal WindowsMessageBox([CanBeNull] IApplicationRuntime application) : this()
 		{
 			mApplication = application;
 		}
@@ -151,7 +151,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		private MessageBoxResult Display(MessageBoxButton button, MessageBoxImage image)
 		{
-			var dispatcher = mApplication?.Dispatcher ?? Application.Current?.Dispatcher;
+			var dispatcher = mApplication?.GetDispatcher() ?? Application.Current?.Dispatcher;
 			var function = Compile(button, image);
 
 			if (dispatcher != null)
@@ -163,7 +163,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		private async Task<MessageBoxResult> DisplayAsync(MessageBoxButton button, MessageBoxImage image)
 		{
-			var dispatcher = mApplication?.Dispatcher ?? Application.Current?.Dispatcher;
+			var dispatcher = mApplication?.GetDispatcher() ?? Application.Current?.Dispatcher;
 			var function = Compile(button, image);
 
 			if (dispatcher != null)
