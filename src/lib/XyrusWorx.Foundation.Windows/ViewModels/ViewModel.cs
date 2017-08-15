@@ -8,6 +8,7 @@ namespace XyrusWorx.Windows.ViewModels
 	[PublicAPI, DataContract]
 	public class ViewModel : INotifyPropertyChanged
 	{
+		[IgnoreDataMember]
 		private readonly IScope mNotificationSupressionScope;
 
 		public ViewModel()
@@ -42,7 +43,7 @@ namespace XyrusWorx.Windows.ViewModels
 		public static event PropertyChangedEventHandler GlobalPropertyChanged;
 	}
 
-	[PublicAPI]
+	[PublicAPI, DataContract]
 	public class ViewModel<T> : ViewModel
 	{
 		private T mModel;
