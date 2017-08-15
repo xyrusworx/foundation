@@ -5,7 +5,8 @@ using JetBrains.Annotations;
 
 namespace XyrusWorx.Windows.Runtime
 {
-	class WindowsMessageBox : IMessageBox, IAsyncMessageBox
+	[PublicAPI]
+	public class WindowsMessageBox : IMessageBox, IAsyncMessageBox
 	{
 		private readonly ApplicationDefinition mApplication;
 
@@ -14,13 +15,11 @@ namespace XyrusWorx.Windows.Runtime
 		private MessageBoxImage mClass;
 		private Window mOwner;
 
-		public WindowsMessageBox([NotNull] ApplicationDefinition application)
+		public WindowsMessageBox()
 		{
-			if (application == null)
-			{
-				throw new ArgumentNullException(nameof(application));
-			}
-
+		}
+		internal WindowsMessageBox([CanBeNull] ApplicationDefinition application) : this()
+		{
 			mApplication = application;
 		}
 
@@ -152,7 +151,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		private MessageBoxResult Display(MessageBoxButton button, MessageBoxImage image)
 		{
-			var dispatcher = mApplication.Dispatcher;
+			var dispatcher = mApplication?.Dispatcher ?? Application.Current?.Dispatcher;
 			var function = Compile(button, image);
 
 			if (dispatcher != null)
@@ -164,7 +163,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		private async Task<MessageBoxResult> DisplayAsync(MessageBoxButton button, MessageBoxImage image)
 		{
-			var dispatcher = mApplication.Dispatcher;
+			var dispatcher = mApplication?.Dispatcher ?? Application.Current?.Dispatcher;
 			var function = Compile(button, image);
 
 			if (dispatcher != null)
