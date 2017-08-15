@@ -6,7 +6,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using XyrusWorx.Collections;
 
-namespace XyrusWorx.MVVM
+namespace XyrusWorx.Windows.ViewModels
 {
 	[PublicAPI]
 	public class SelectionViewModel<T> : ViewModel

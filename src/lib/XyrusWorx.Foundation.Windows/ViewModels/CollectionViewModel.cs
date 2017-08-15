@@ -2,7 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.MVVM
+namespace XyrusWorx.Windows.ViewModels
 {
 	[PublicAPI]
 	public abstract class CollectionViewModel<T> : ViewModel

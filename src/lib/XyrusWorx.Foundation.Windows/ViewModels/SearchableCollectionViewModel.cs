@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using JetBrains.Annotations;
 using XyrusWorx.Collections;
-using XyrusWorx.MVVM;
 using XyrusWorx.Threading;
 using XyrusWorx.Windows.Input;
 

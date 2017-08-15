@@ -26,6 +26,9 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MVVM" />
+  </ItemGroup>
   <PropertyGroup Label="Configuration">
     <RootNamespace>XyrusWorx</RootNamespace>
   </PropertyGroup>

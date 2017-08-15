@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using JetBrains.Annotations;
-using XyrusWorx.MVVM;
 using XyrusWorx.Runtime;
 using XyrusWorx.Threading;
+using XyrusWorx.Windows.ViewModels;
 using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime

@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.MVVM
+namespace XyrusWorx.Windows.ViewModels
 {
-	[PublicAPI]
+	[PublicAPI, DataContract]
 	public class ViewModel : INotifyPropertyChanged
 	{
 		private readonly IScope mNotificationSupressionScope;

@@ -3,8 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
 using JetBrains.Annotations;
-using XyrusWorx.MVVM;
 using XyrusWorx.Runtime;
+using XyrusWorx.Windows.ViewModels;
 using Application = XyrusWorx.Runtime.Application;
 
 namespace XyrusWorx.Windows.Runtime
