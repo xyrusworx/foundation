@@ -28,11 +28,6 @@ namespace XyrusWorx.Runtime
 
 		protected Application()
 		{
-			if (mCurrent != null)
-			{
-				throw new InvalidOperationException("Only one application per domain is allowed.");
-			}
-
 #if (NO_NATIVE_BOOTSTRAPPER)
 			Assembly assembly = null;
 #else
