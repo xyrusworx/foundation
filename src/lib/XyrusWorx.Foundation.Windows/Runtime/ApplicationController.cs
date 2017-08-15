@@ -2,11 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
-using System.Windows.Threading;
 using JetBrains.Annotations;
 using XyrusWorx.MVVM;
 using XyrusWorx.Runtime;
-using XyrusWorx.Threading;
 using Application = XyrusWorx.Runtime.Application;
 
 namespace XyrusWorx.Windows.Runtime
@@ -18,7 +16,7 @@ namespace XyrusWorx.Windows.Runtime
 	{
 		protected ApplicationController()
 		{
-			WaitHandler = new DispatcherFriendlyWaitHandler();
+			WaitHandler = new WpfWaitHandler();
 
 			ServiceLocator.Default.Register<IMessageBox, WindowsMessageBox>();
 			ServiceLocator.Default.Register<IExceptionHandlerService>(this);
@@ -83,21 +81,5 @@ namespace XyrusWorx.Windows.Runtime
 			return HandleException(exception);
 		}
 		IMessageBox IDialogService.CreateDialog() => Dialog;
-
-		class DispatcherFriendlyWaitHandler : OperationWaitHandler
-		{
-			protected override void ProcessMessages()
-			{
-				var dispatcher = System.Windows.Application.Current?.Dispatcher;
-				if (dispatcher == null)
-				{
-					Thread.Sleep(100);
-				}
-				else
-				{
-					dispatcher.Invoke(() => { }, DispatcherPriority.Background);
-				}
-			}
-		}
 	}
 }
