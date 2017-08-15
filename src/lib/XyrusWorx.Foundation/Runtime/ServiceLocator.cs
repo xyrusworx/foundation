@@ -9,7 +9,7 @@ using XyrusWorx.Collections;
 namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
-	public class ServiceLocator
+	public class ServiceLocator : IServiceLocator
 	{
 		private static Lazy<ServiceLocator> mDefault;
 		private Dictionary<ServiceHandle, ServiceHandle> mServices;
@@ -28,8 +28,12 @@ namespace XyrusWorx.Runtime
 		[NotNull]
 		public static ServiceLocator Default => mDefault.Value;
 
-		public void Register<T>() => Register(typeof(T));
-		public void Register([NotNull] Type type)
+		public void Clear()
+		{
+			mServices.Clear();
+		}
+
+		public void Register(Type type)
 		{
 			if (type == null)
 			{
@@ -46,9 +50,7 @@ namespace XyrusWorx.Runtime
 			var handle = new ServiceHandle(type);
 			mServices.AddOrUpdate(handle, handle);
 		}
-
-		public void Register<TInterface, TImplementation>() => Register(typeof(TInterface), typeof(TImplementation));
-		public void Register([NotNull] Type interfaceType, [NotNull] Type implementationType)
+		public void Register(Type interfaceType, Type implementationType)
 		{
 			if (interfaceType == null)
 			{
@@ -63,9 +65,7 @@ namespace XyrusWorx.Runtime
 			var handle = new ServiceHandle(interfaceType, implementationType);
 			mServices.AddOrUpdate(handle, handle);
 		}
-
-		public void Register<T>(T instance) => Register(typeof(T), instance);
-		public void Register([NotNull] Type type, [NotNull] object instance)
+		public void Register(Type type, object instance)
 		{
 			if (type == null)
 			{
@@ -81,8 +81,7 @@ namespace XyrusWorx.Runtime
 			mServices.AddOrUpdate(handle, handle);
 		}
 
-		public void RegisterSingleton<T>() => RegisterSingleton(typeof(T));
-		public void RegisterSingleton([NotNull] Type type)
+		public void RegisterSingleton(Type type)
 		{
 			if (type == null)
 			{
@@ -94,9 +93,7 @@ namespace XyrusWorx.Runtime
 
 			mServices.AddOrUpdate(handle, handle);
 		}
-
-		public void RegisterSingleton<TInterface, TImplementation>() => RegisterSingleton(typeof(TInterface), typeof(TImplementation));
-		public void RegisterSingleton([NotNull] Type interfaceType, [NotNull] Type implementationType)
+		public void RegisterSingleton(Type interfaceType, Type implementationType)
 		{
 			if (interfaceType == null)
 			{
@@ -114,30 +111,29 @@ namespace XyrusWorx.Runtime
 			mServices.AddOrUpdate(handle, handle);
 		}
 
-		public T Resolve<T>() => (T)Resolve(typeof(T));
-		public object Resolve(Type type) => Resolve(type, null);
+		public object Resolve(Type type)
+		{
+			if (type == null)
+			{
+				throw new ArgumentNullException(nameof(type));
+			}
 
-		public Result<T> TryResolve<T>()
-		{
-			try
-			{
-				return new Result<T>(Resolve<T>());
-			}
-			catch (Exception exception)
-			{
-				return Result.CreateError(exception).Specialize<Result<T>>();
-			}
+			return Resolve(type, null);
 		}
-		public Result<object> TryResolve(Type type)
+
+		public object CreateInstance(Type type)
 		{
-			try
+			if (type == null)
 			{
-				return new Result<object>(Resolve(type));
+				throw new ArgumentNullException(nameof(type));
 			}
-			catch (Exception exception)
+
+			if (type.GetTypeInfo().IsInterface || type.GetTypeInfo().IsAbstract)
 			{
-				return Result.CreateError(exception).Specialize<Result<object>>();
+				throw new ArgumentException($"The type \"{type}\" is abstract or an interface.");
 			}
+
+			return CreateInstance(type, null);
 		}
 
 		private object Resolve(Type type, Type[] path)
