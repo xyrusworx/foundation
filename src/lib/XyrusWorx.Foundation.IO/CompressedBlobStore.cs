@@ -46,13 +46,13 @@ namespace XyrusWorx.IO
 
 			using (var reader = container.Read())
 			{
-				if (reader.BaseStream.Length == 0)
+				if (reader.Length == 0)
 				{
 					exists = false;
 				}
 				else
 				{
-					using (var readArchive = new ZipArchive(reader.BaseStream, ZipArchiveMode.Read, true))
+					using (var readArchive = new ZipArchive(reader, ZipArchiveMode.Read, true))
 					{
 						foreach (var entry in readArchive.Entries)
 						{

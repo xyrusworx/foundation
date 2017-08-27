@@ -9,24 +9,8 @@ namespace XyrusWorx.Diagnostics
 	public class ConsoleWriter : LogWriter
 	{
 		private static readonly object mDispatchLock = new object();
-		private readonly int mLineLength;
 
-		public ConsoleWriter()
-		{
-			int lineLength;
-
-			try
-			{
-				lineLength = Console.BufferWidth;
-			}
-			catch
-			{
-				lineLength = 120;
-			}
-
-			mLineLength = lineLength;
-		}
-		public int SuggestedMaxLineLength => mLineLength;
+		public bool IncludeScope { get; set; }
 
 		protected sealed override void DispatchOverride(LogMessage[] messages)
 		{
@@ -62,7 +46,12 @@ namespace XyrusWorx.Diagnostics
 		}
 		protected virtual void Format([NotNull] StringBuilder line, [NotNull] LogMessage message)
 		{
-			line.Append(message.ToString(mLineLength));
+			if (IncludeScope && !string.IsNullOrWhiteSpace(message.Scope?.ToString()) && !string.IsNullOrWhiteSpace(message.Text))
+			{
+				line.Append($"{message.Scope}: ");
+			}
+
+			line.Append(message.Text);
 		}
 
 		protected virtual ConsoleColor? GetForeground(LogMessageClass messageClass)
@@ -74,23 +63,12 @@ namespace XyrusWorx.Diagnostics
 				case LogMessageClass.Warning:
 					return ConsoleColor.Yellow;
 				case LogMessageClass.Error:
-					return ConsoleColor.White;
+					return ConsoleColor.Red;
 			}
 
 			return null;
 		}
-		protected virtual ConsoleColor? GetBackground(LogMessageClass messageClass)
-		{
-			switch (messageClass)
-			{
-				case LogMessageClass.Warning:
-					return ConsoleColor.DarkMagenta;
-				case LogMessageClass.Error:
-					return ConsoleColor.DarkRed;
-			}
-
-			return null;
-		}
+		protected virtual ConsoleColor? GetBackground(LogMessageClass messageClass) => null;
 
 		private void WriteBulk(string bulk, LogMessageClass c)
 		{

@@ -8,7 +8,30 @@ namespace XyrusWorx.Runtime
 	[PublicAPI]
 	public abstract class ConsoleApplication : Application
 	{
-		public string ReadPassword()
+		public static int GetAvailableBufferWidth()
+		{
+			try
+			{
+				return Console.BufferWidth;
+			}
+			catch
+			{
+				return 120;
+			}
+		}
+		public static int GetAvailableWindowWidth()
+		{
+			try
+			{
+				return Console.WindowWidth;
+			}
+			catch
+			{
+				return 120;
+			}
+		}
+		
+		public static string ReadPassword()
 		{
 			if (Console.IsInputRedirected)
 			{
@@ -44,7 +67,7 @@ namespace XyrusWorx.Runtime
 
 		protected sealed override IResult InitializeApplication()
 		{
-			Log.LinkedDispatchers.Add(new LightConsoleWriter());
+			Log.LinkedDispatchers.Add(new ConsoleWriter());
 			Log.Verbosity = Verbosity;
 
 			var result = InitializeOverride();
@@ -60,10 +83,7 @@ namespace XyrusWorx.Runtime
 
 			return Result.Success;
 		}
-		protected virtual IResult InitializeOverride()
-		{
-			return Result.Success;
-		}
+		protected virtual IResult InitializeOverride() => Result.Success;
 
 		[CommandLineProperty("verbosity")]
 		public LogVerbosity Verbosity { get; set; }
@@ -75,10 +95,8 @@ namespace XyrusWorx.Runtime
 		public bool ConfirmExit { get; set; }
 
 		[NotNull]
-		public IScope WithColor(ConsoleColor? foreground = null, ConsoleColor? background = null)
-		{
-			return new ConsoleColorScope(foreground, background).Enter();
-		}
+		public static IScope WithColor(ConsoleColor? foreground = null, ConsoleColor? background = null) 
+			=> new ConsoleColorScope(foreground, background).Enter();
 
 		public void WriteHelp(ConsoleColor emphasisColor = ConsoleColor.White)
 		{
@@ -96,7 +114,7 @@ namespace XyrusWorx.Runtime
 				throw new ArgumentNullException(nameof(documentation));
 			}
 
-			var writer = new LightConsoleWriter { IncludeScope = false };
+			var writer = new ConsoleWriter { IncludeScope = false };
 
 			var names = documentation.GetSortedTokens().OfType<CommandLineNamedTokenDocumentation>().ToArray();
 			var shortDescriptions = names.Where(x => !string.IsNullOrWhiteSpace(x.ShortDescription)).ToArray();
@@ -106,7 +124,9 @@ namespace XyrusWorx.Runtime
 				Console.WriteLine("Usage");
 			}
 
-			Console.WriteLine($"   {Metadata.ModuleName} {documentation}".WordWrap(writer.SuggestedMaxLineLength, new string(' ', 3), ""));
+			var bufferWidth = GetAvailableBufferWidth();
+
+			Console.WriteLine($"   {Metadata.ModuleName} {documentation}".WordWrap(bufferWidth, new string(' ', 3), ""));
 
 			if (shortDescriptions.Any())
 			{
@@ -122,7 +142,7 @@ namespace XyrusWorx.Runtime
 				foreach (var token in shortDescriptions)
 				{
 					var label = GetTokenLabel(token).PadRight(padWidth);
-					writer.WriteInformation($"   {label}{token.ShortDescription}".WordWrap(writer.SuggestedMaxLineLength, new string(' ', padWidth + 3), ""));
+					writer.WriteInformation($"   {label}{token.ShortDescription}".WordWrap(bufferWidth, new string(' ', padWidth + 3), ""));
 				}
 			}
 
@@ -146,10 +166,42 @@ namespace XyrusWorx.Runtime
 						Console.WriteLine($"   {label}");
 					}
 
-					writer.WriteInformation(token.Description.WordWrap(writer.SuggestedMaxLineLength, "      "));
+					writer.WriteInformation(token.Description.WordWrap(bufferWidth, "      "));
 					Console.WriteLine();
 				}
 			}
+		}
+		
+		public void WaitForKey()
+		{
+			if (Console.IsErrorRedirected || Console.IsOutputRedirected || Console.IsInputRedirected)
+			{
+				return;
+			}
+
+			WaitHandler.Wait(() => Console.KeyAvailable);
+			Console.ReadKey(true);
+		}
+		public void WaitForKey(ConsoleKey key, ConsoleModifiers modifiers = default(ConsoleModifiers))
+		{
+			if (Console.IsErrorRedirected || Console.IsOutputRedirected || Console.IsInputRedirected)
+			{
+				return;
+			}
+
+			WaitHandler.Wait(
+				() =>
+				{
+					if (!Console.KeyAvailable)
+					{
+						return false;
+					}
+					
+					var interceptedKey = Console.ReadKey(true);
+					return 
+						interceptedKey.Key == key && 
+						interceptedKey.Modifiers == modifiers;
+				});
 		}
 
 		protected sealed override void Cleanup(bool wasCancelled)
@@ -160,12 +212,10 @@ namespace XyrusWorx.Runtime
 			}
 			finally
 			{
-				if (ConfirmExit)
-				{
-					WaitForKey();
-				}
+				QueryUserConfirmationIfConfigured();
 			}
 		}
+
 		protected virtual void CleanupOverride()
 		{
 			if (ExecutionResult.HasError)
@@ -178,7 +228,11 @@ namespace XyrusWorx.Runtime
 		[ContractAnnotation("=> halt")]
 		protected void Terminate(int exitCode)
 		{
-			WaitForKey();
+			if (ConfirmExit)
+			{
+				Console.Out.WriteLine("Press any key to continue . . . ");
+				WaitForKey();				
+			}
 			Environment.Exit(exitCode);
 		}
 #endif
@@ -205,20 +259,6 @@ namespace XyrusWorx.Runtime
 
 			
 		}
-		private void WaitForKey()
-		{
-			if (Console.IsErrorRedirected || Console.IsOutputRedirected)
-			{
-				return;
-			}
-
-			Console.Out.WriteLine("Press any key to continue . . . ");
-
-			WaitHandler.Wait(() => Console.KeyAvailable);
-
-			Console.ReadKey(true);
-		}
-
 		private string GetTokenLabel(CommandLineNamedTokenDocumentation token)
 		{
 			if (string.IsNullOrWhiteSpace(token.ShortName))
@@ -227,6 +267,15 @@ namespace XyrusWorx.Runtime
 			}
 
 			return $"-{token.ShortName} / --{token.Name}";
+		}
+		private void QueryUserConfirmationIfConfigured()
+		{
+			var hasRedirections = Console.IsInputRedirected || Console.IsOutputRedirected || Console.IsErrorRedirected;
+			if (ConfirmExit && !hasRedirections)
+			{
+				Console.Out.WriteLine("Press any key to continue . . . ");
+				WaitForKey();
+			}
 		}
 	}
 }
