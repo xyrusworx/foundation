@@ -64,22 +64,41 @@ namespace XyrusWorx.Runtime
 
 		public static void AutoRegister([NotNull] this IServiceLocator serviceLocator, [NotNull] Assembly assembly, [NotNull] Type baseType, params Type[] additionalBaseTypes)
 			=> AutoRegister(serviceLocator, assembly, (additionalBaseTypes ?? new Type[0]).Prepend(baseType));
-		
+
 		public static void AutoRegister([NotNull] this IServiceLocator serviceLocator, [NotNull] Assembly assembly, [NotNull] IEnumerable<Type> baseTypes)
 		{
 			if (serviceLocator == null)
 			{
 				throw new ArgumentNullException(nameof(serviceLocator));
 			}
-			
+
 			if (assembly == null)
 			{
 				throw new ArgumentNullException(nameof(assembly));
 			}
-			
+
 			if (baseTypes == null)
 			{
 				throw new ArgumentNullException(nameof(baseTypes));
+			}
+
+			IEnumerable<Type> GetDirectInterfaces(Type type)
+			{
+				var allInterfaces = new List<Type>();
+				var childInterfaces = new List<Type>();
+
+				if (type.BaseType != null)
+				{
+					childInterfaces.AddRange(type.BaseType.GetInterfaces());
+				}
+
+				foreach (var i in type.GetInterfaces())
+				{
+					allInterfaces.Add(i);
+					childInterfaces.AddRange(i.GetInterfaces());
+				}
+
+				return allInterfaces.Except(childInterfaces);
 			}
 
 			var templates =
@@ -89,21 +108,21 @@ namespace XyrusWorx.Runtime
 				where baseTypes.Any(x => x.IsAssignableFrom(type))
 
 				let isSingleton = type.GetCustomAttribute<SingletonAttribute>() != null
-				let interfaceList = type.GetInterfaces()
+				let interfaceList = GetDirectInterfaces(type).ToArray()
 				let interfaceAttribute = type.GetCustomAttribute<ServiceInterfaceAttribute>()
-				
-				let significantInterface = 
-					interfaceAttribute != null ? interfaceAttribute.InterfaceType:
-					interfaceList.Length == 1 ? interfaceList[0]: 
+
+				let significantInterface =
+					interfaceAttribute != null ? interfaceAttribute.InterfaceType : 
+					interfaceList.Length == 1 ? interfaceList[0] : 
 					null
-				
+
 				select new
 				{
 					Type = type,
 					IsSingleton = isSingleton,
 					Interface = significantInterface ?? type
 				};
-			
+
 			foreach (var template in templates)
 			{
 				if (template.IsSingleton)
