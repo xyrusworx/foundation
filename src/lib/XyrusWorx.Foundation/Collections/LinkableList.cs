@@ -173,4 +173,5 @@ namespace XyrusWorx.Collections
 			RemoveAction?.Invoke(item);
 		}
 	}
+
 }
