@@ -10,9 +10,9 @@ namespace XyrusWorx.IO
 	{
 		public abstract StringKey Identifier { get; }
 
-		[NotNull] public BinaryReader Read() => new BinaryReader(OpenStream(AccessMode.Read));
-		[NotNull] public BinaryWriter Write() => new BinaryWriter(OpenStream(AccessMode.Write));
-		[NotNull] public BinaryWriter Append() => new BinaryWriter(OpenStream(AccessMode.Append));
+		[NotNull] public Stream Read() => OpenStream(AccessMode.Read);
+		[NotNull] public Stream Write() => OpenStream(AccessMode.Write);
+		[NotNull] public Stream Append() => OpenStream(AccessMode.Append);
 		[NotNull] public Stream ReadWrite() => OpenStream(AccessMode.Read | AccessMode.Write);
 
 		[NotNull]
@@ -45,7 +45,7 @@ namespace XyrusWorx.IO
 				return;
 			}
 
-			using (var writer = Write())
+			using (var writer = new BinaryWriter(Write()))
 			{
 				writer.Write(bytes);
 			}
@@ -57,17 +57,17 @@ namespace XyrusWorx.IO
 				return;
 			}
 
-			using (var writer = Append())
+			using (var writer = new BinaryWriter(Append()))
 			{
 				writer.Write(bytes);
 			}
 		}
 
-		public void Copy([NotNull] BinaryWriter writer)
+		public void Copy([NotNull] Stream target)
 		{
-			if (writer == null)
+			if (target == null)
 			{
-				throw new ArgumentNullException(nameof(writer));
+				throw new ArgumentNullException(nameof(target));
 			}
 
 			using (var reader = Read())
@@ -78,7 +78,7 @@ namespace XyrusWorx.IO
 
 				while ((read = reader.Read(buffer, 0, buffer.Length)) > 0)
 				{
-					writer.Write(buffer, 0, read);
+					target.Write(buffer, 0, read);
 				}
 
 			}

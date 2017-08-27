@@ -27,21 +27,21 @@ namespace XyrusWorx.IO
 
 		[NotNull] public TextReader Read()
 		{
-			var binaryReader = mRawData.Read();
+			var stream = mRawData.Read();
 
-			return new StreamReader(binaryReader.BaseStream, mEncoding ?? Encoding.UTF8);
+			return new StreamReader(stream, mEncoding ?? Encoding.UTF8);
 		}
 		[NotNull] public TextWriter Write()
 		{
-			var binaryWriter = mRawData.Write();
+			var stream = mRawData.Write();
 
-			return new StreamWriter(binaryWriter.BaseStream, mEncoding ?? Encoding.UTF8);
+			return new StreamWriter(stream, mEncoding ?? Encoding.UTF8);
 		}
 		[NotNull] public TextWriter Append()
 		{
-			var binaryWriter = mRawData.Append();
+			var stream = mRawData.Append();
 
-			return new StreamWriter(binaryWriter.BaseStream, mEncoding ?? Encoding.UTF8);
+			return new StreamWriter(stream, mEncoding ?? Encoding.UTF8);
 		}
 
 		[NotNull]

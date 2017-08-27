@@ -50,9 +50,9 @@ namespace XyrusWorx.IO
 				throw new NotSupportedException($"This storage instance (\"{this}\") does not allow write operations.");
 			}
 
-			using (var writer = Open(key).Append())
+			using (var target = Open(key).Append())
 			{
-				data.Copy(writer);
+				data.Copy(target);
 			}
 		}
 		public void Write(StringKey key, BinaryContainer data)
@@ -62,9 +62,9 @@ namespace XyrusWorx.IO
 				throw new NotSupportedException($"This storage instance (\"{this}\") does not allow write operations.");
 			}
 
-			using (var writer = Open(key).Write())
+			using (var target = Open(key).Write())
 			{
-				data.Copy(writer);
+				data.Copy(target);
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace XyrusWorx.IO
 		public void Write(StringKey key, TextContainer data) => Write(key, data.AsBinary());
 
 		[NotNull]
-		protected internal abstract Stream OpenStream(StringKey key, AccessMode accessMode);
+		internal protected abstract Stream OpenStream(StringKey key, AccessMode accessMode);
 
 		public void Clear()
 		{
