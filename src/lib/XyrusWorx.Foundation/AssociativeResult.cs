@@ -61,6 +61,11 @@ namespace XyrusWorx
 				mResults.AddOrUpdate(id, value ?? Result.Success);
 			}
 		}
+		
+		public void ThrowIfError()
+		{
+			new Result{HasError = HasError, ErrorDescription = ErrorDescription}.ThrowIfError();
+		}
 
 		[NotNull]
 		public IDictionary<TId, IResult> Results => mResults;

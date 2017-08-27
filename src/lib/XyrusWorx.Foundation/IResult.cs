@@ -9,5 +9,7 @@ namespace XyrusWorx
 
 		[CanBeNull]
 		string ErrorDescription { get; }
+
+		void ThrowIfError();
 	}
 }

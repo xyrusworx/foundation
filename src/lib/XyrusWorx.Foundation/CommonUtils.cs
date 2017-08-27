@@ -16,10 +16,7 @@ namespace XyrusWorx
 	{
 		private const string mNotAMemberExpression = "The provided expression (\"{1}\") does not contain a member of type {0}";
 
-		public static T UnboxTo<T>([CanBeNull] this object instance) 
-		{
-			return instance is T ? (T)instance : default(T);
-		}
+		public static T UnboxTo<T>([CanBeNull] this object instance) => instance is T t ? t : default(T);
 
 		public static T AssertNotNull<T>([CanBeNull] this T instance) where T: class
 		{
@@ -34,10 +31,7 @@ namespace XyrusWorx
 		}
 
 		[CanBeNull]
-		public static T CastTo<T>([CanBeNull] this object instance) where T : class
-		{
-			return instance as T;
-		}
+		public static T CastTo<T>([CanBeNull] this object instance) where T : class => instance as T;
 
 		[NotNull]
 		public static MemberInfo GetMember<T>([NotNull] this Type type, Expression<Action<T>> memberExpression)
@@ -95,10 +89,7 @@ namespace XyrusWorx
 			return info;
 		}
 
-		public static bool HasFlag(this int value, int flag)
-		{
-			return (value & flag) == flag;
-		}
+		public static bool HasFlag(this int value, int flag) => (value & flag) == flag;
 
 		[NotNull]
 		public static IEnumerable<Exception> Unroll([NotNull] this Exception exception)

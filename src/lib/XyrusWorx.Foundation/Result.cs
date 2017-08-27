@@ -85,14 +85,22 @@ namespace XyrusWorx
 			return targetResponse;
 		}
 
-		[NotNull]
-		public T Specialize<T>() where T : Result, new()
-		{
-			return (T)Specialize(typeof(T));
-		}
+		[Pure][NotNull]
+		public T Specialize<T>() where T : Result, new() => (T)Specialize(typeof(T));
+		
+		[Pure][NotNull]
+		public Result<T> With<T>(T data = default(T)) => new Result<T>(data);
 
 		[NotNull]
 		public static Result Success { get; } = new Result {ErrorDescription = "The operation completed successfully."};
+
+		public void ThrowIfError()
+		{
+			if (HasError)
+			{
+				throw new Exception(ErrorDescription);
+			}
+		}
 	}
 
 	[PublicAPI]
@@ -104,5 +112,19 @@ namespace XyrusWorx
 			Data = data;
 		}
 		public T Data { get; set; }
+		
+		[Pure]
+		public T GetOrThrow()
+		{
+			if (!HasError)
+			{
+				return Data;
+			}
+
+			throw new Exception(ErrorDescription);
+		}
+
+		[Pure, NotNull]
+		public static implicit operator Result<T>(T data) => new Result<T>(data);
 	}
 }

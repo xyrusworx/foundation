@@ -113,6 +113,11 @@ namespace XyrusWorx.Communication.Client
 				return (T)(await mCommunicationStrategy.ReadAsync(stream, GetEncoding(), typeof(T)));
 			}
 		}
+		
+		public void ThrowIfError()
+		{
+			new Result{HasError = HasError, ErrorDescription = ErrorDescription}.ThrowIfError();
+		}
 
 		private Encoding GetEncoding()
 		{

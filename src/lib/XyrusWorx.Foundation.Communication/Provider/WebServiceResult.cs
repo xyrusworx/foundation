@@ -51,5 +51,10 @@ namespace XyrusWorx.Communication.Provider
 			}
 		}
 		public object Data { get; set; }
+		
+		public void ThrowIfError()
+		{
+			new Result{HasError = HasError, ErrorDescription = ErrorDescription}.ThrowIfError();
+		}
 	}
 }
