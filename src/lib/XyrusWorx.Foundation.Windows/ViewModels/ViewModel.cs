@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using JetBrains.Annotations;
@@ -16,6 +17,7 @@ namespace XyrusWorx.Windows.ViewModels
 			mNotificationSupressionScope = new Scope(() => { }, () => NotifyChange(string.Empty));
 		}
 
+		[field: IgnoreDataMember, NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotNull]

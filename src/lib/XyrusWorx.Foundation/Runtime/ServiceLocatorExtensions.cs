@@ -94,7 +94,7 @@ namespace XyrusWorx.Runtime
 				
 				let significantInterface = 
 					interfaceAttribute != null ? interfaceAttribute.InterfaceType:
-					interfaceList.Length == 1 ? interfaceList[1]: 
+					interfaceList.Length == 1 ? interfaceList[0]: 
 					null
 				
 				select new
