@@ -10,7 +10,7 @@ namespace XyrusWorx
 	[PublicAPI, DebuggerDisplay("ShortDisplayString")]
 	public struct Duration : IEquatable<Duration>, IComparable<Duration>, IComparable
 	{
-		private double mMinutes;
+		private readonly double mMinutes;
 
 		public Duration(double minutes)
 		{
@@ -31,14 +31,40 @@ namespace XyrusWorx
 			mMinutes = data.mMinutes;
 		}
 
-		public double Weeks => Days / 7;
-		public double Days => Hours / 24;
-		public double Hours => Minutes / 60;
-		public double Minutes => mMinutes;
-		public double Seconds => Minutes * 60;
-		public double Milliseconds => Seconds * 1000;
+		public double Weeks
+		{
+			get => Days / 7;
+		}
 
-		public static Duration Zero => new Duration();
+		public double Days
+		{
+			get => Hours / 24;
+		}
+
+		public double Hours
+		{
+			get => Minutes / 60;
+		}
+
+		public double Minutes
+		{
+			get => mMinutes;
+		}
+
+		public double Seconds
+		{
+			get => Minutes * 60;
+		}
+
+		public double Milliseconds
+		{
+			get => Seconds * 1000;
+		}
+
+		public static Duration Zero
+		{
+			get => new Duration();
+		}
 
 		public TimeSpan ToTimeSpan() => TimeSpan.FromMinutes(mMinutes);
 
@@ -79,16 +105,24 @@ namespace XyrusWorx
 				return str.Concat(", ");
 			}
 		}
-		public string ShortDisplayString => SerializeCore(this, CultureInfo.CurrentCulture);
-
-		public static Duration Parse([NotNull] string str)
+		public string ShortDisplayString
 		{
-			return Parse(str, CultureInfo.CurrentCulture);
+			get => SerializeCore(this, CultureInfo.CurrentCulture);
 		}
+
+		public static Duration Parse([NotNull] string str) => Parse(str, CultureInfo.CurrentCulture);
+
 		public static Duration Parse([NotNull] string str, [NotNull] IFormatProvider format)
 		{
-			if (str == null) throw new ArgumentNullException(nameof(str));
-			if (format == null) throw new ArgumentNullException(nameof(format));
+			if (str == null)
+			{
+				throw new ArgumentNullException(nameof(str));
+			}
+			
+			if (format == null)
+			{
+				throw new ArgumentNullException(nameof(format));
+			}
 
 			var result = ParseCore(str, format);
 			if (result.HasError)
@@ -99,10 +133,8 @@ namespace XyrusWorx
 			return result.Data;
 		}
 
-		public static bool TryParse(string str, out Duration value)
-		{
-			return TryParse(str, CultureInfo.CurrentCulture, out value);
-		}
+		public static bool TryParse(string str, out Duration value) => TryParse(str, CultureInfo.CurrentCulture, out value);
+
 		public static bool TryParse(string str, [NotNull] IFormatProvider format, out Duration value)
 		{
 			if (format == null)
@@ -123,19 +155,21 @@ namespace XyrusWorx
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(null, obj))
+			{
+				return false;
+			}
+			
 			return obj is Duration && Equals((Duration)obj);
 		}
-		public bool Equals(Duration other)
-		{
-			return mMinutes.Equals(other.mMinutes);
-		}
-		public override int GetHashCode()
-		{
-			// ReSharper disable once NonReadonlyMemberInGetHashCode
-			return mMinutes.GetHashCode();
-		}
+		// ReSharper disable once ImpureMethodCallOnReadonlyValueField
+		public bool Equals(Duration other) => mMinutes.Equals(other.mMinutes);
 
+		// ReSharper disable once ImpureMethodCallOnReadonlyValueField
+		public override int GetHashCode() => mMinutes.GetHashCode();
+
+		// ReSharper disable once ImpureMethodCallOnReadonlyValueField
+		public int CompareTo(Duration other) => mMinutes.CompareTo(other.mMinutes);
 		public int CompareTo(object obj)
 		{
 			if (!(obj is Duration))
@@ -144,10 +178,6 @@ namespace XyrusWorx
 			}
 
 			return CompareTo((Duration)obj);
-		}
-		public int CompareTo(Duration other)
-		{
-			return mMinutes.CompareTo(other.mMinutes);
 		}
 
 		public static Duration operator +(Duration left, Duration right) => new Duration(left.mMinutes + right.mMinutes);
@@ -182,14 +212,8 @@ namespace XyrusWorx
 		public static implicit operator Duration(TimeSpan timeSpan) => new Duration(timeSpan);
 		public static explicit operator TimeSpan(Duration duration) => duration.ToTimeSpan();
 
-		public override string ToString()
-		{
-			return ToString(CultureInfo.CurrentCulture);
-		}
-		public string ToString(IFormatProvider format)
-		{
-			return SerializeCore(this, format);
-		}
+		public override string ToString() => ToString(CultureInfo.CurrentCulture);
+		public string ToString(IFormatProvider format) => SerializeCore(this, format);
 
 		private static string SerializeCore(Duration value, IFormatProvider format)
 		{
@@ -244,14 +268,14 @@ namespace XyrusWorx
 		{
 			if (str.NormalizeNull() == null)
 			{
-				return Err("Die Eingabezeichenfolge ist leer.");
+				return Err("The input string is empty");
 			}
 
 			var tokens = Regex.Split(str, @"\s+");
 			var timeSpan = TimeSpan.Zero;
 			var tokenExpression = new Regex(@"([-+]?[0-9]*\.?[0-9]+)((?:ms|[smhdw])?)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-			foreach (string token in tokens)
+			foreach (var token in tokens)
 			{
 				if (string.IsNullOrWhiteSpace(token))
 				{
@@ -261,13 +285,13 @@ namespace XyrusWorx
 				var match = tokenExpression.Match(token.Trim());
 				if (!match.Success)
 				{
-					return Err($"Syntaxfehler in der Nähe von '{token}'");
+					return Err($"Syntax error at '{token}'");
 				}
 
 				double value;
 				if (!double.TryParse(match.Groups[1].Value, NumberStyles.Float, format, out value))
 				{
-					return Err($"Fehler bei Verarbeitung des Zahlenwerts '{match.Groups[1].Value}' in der Nähe von '{token}'");
+					return Err($"Error processing numeric value '{match.Groups[1].Value}' at '{token}'");
 				}
 
 				switch (match.Groups[2].Value.ToLower())
@@ -291,7 +315,7 @@ namespace XyrusWorx
 						timeSpan = timeSpan.Add(TimeSpan.FromDays(value * 7));
 						break;
 					default:
-						return Err($"Unbekannte Einheit '{match.Groups[2].Value}' in der Nähe von '{token}'. Gültig sind: Millisekunden (ms), Sekunden (s), Minuten (m), Stunden (h), Tage (d) und Wochen (w).");
+						return Err($"Unknown unit '{match.Groups[2].Value}' at '{token}'. Valid units are: milliseconds (ms), seconds (s), minutes (m), hours (h), days (d) and weeks (w).");
 				}
 			}
 

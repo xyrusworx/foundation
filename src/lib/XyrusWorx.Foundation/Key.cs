@@ -37,6 +37,7 @@ namespace XyrusWorx
 
 		public override int GetHashCode()
 		{
+			// ReSharper disable once ImpureMethodCallOnReadonlyValueField
 			return mRawData.GetHashCode();
 		}
 		public override bool Equals(object obj)
@@ -49,6 +50,7 @@ namespace XyrusWorx
 			return Equals(mRawData, other.mRawData);
 		}
 
+		// ReSharper disable once ImpureMethodCallOnReadonlyValueField
 		public override string ToString() => mRawData.ToString();
 	}
 }
