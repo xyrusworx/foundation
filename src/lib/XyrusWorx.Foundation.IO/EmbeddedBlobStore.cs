@@ -135,7 +135,10 @@ namespace XyrusWorx.IO
 				let sortKey = childBranches.Any() ? 0 : 1
 				let level = branch.Segments.Length
 
-				orderby sortKey ascending
+				// ReSharper disable once RedundantQueryOrderByAscendingKeyword
+				orderby sortKey ascending 
+
+				// ReSharper disable once MultipleOrderBy
 				orderby level descending
 
 				select new
