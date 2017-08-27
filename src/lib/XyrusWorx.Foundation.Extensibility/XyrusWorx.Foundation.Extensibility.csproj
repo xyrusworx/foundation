@@ -10,8 +10,7 @@
             This package is an extension to the foundation package for XyrusWorx applications, which allows the
             integration of external application components
         </Description>
-    <TargetFrameworks>net451;net452;net46;net461;net462;netstandard1.6</TargetFrameworks>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>

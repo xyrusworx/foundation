@@ -7,7 +7,7 @@
     <AssemblyName>XyrusWorx.Foundation.Windows</AssemblyName>
     <AssemblyTitle>XyrusWorx Foundation Windows Application Runtime</AssemblyTitle>
     <Description>This package contains platform-specific classes and utilities for Microsoft Windows on top of XyrusWorx Foundation</Description>
-    <TargetFrameworks>net46;net461;net462</TargetFrameworks>
+    <TargetFrameworks>net461;net462</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
