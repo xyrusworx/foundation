@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../..">
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Communication" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Communication.Client" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Data" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Extensibility" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.IO" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Threading" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Windows" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../../_ReSharper.Caches/ReSharperHost8.XyrusWorx.Foundation.00" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Communication.Client/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Communication.Client/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Communication/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Communication/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Data/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Data/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Extensibility/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Extensibility/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.IO/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.IO/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Threading/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Threading/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Windows/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation.Windows/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../lib/XyrusWorx.Foundation/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../packages" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

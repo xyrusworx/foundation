@@ -16,9 +16,7 @@ namespace XyrusWorx.Windows.Components
 			var v = value?.ToString().TryDeserialize<double>() ?? 0;
 			return new Thickness(v);
 		}
-		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotSupportedException();
-		}
+		object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
+			=> throw new NotSupportedException();
 	}
 }
