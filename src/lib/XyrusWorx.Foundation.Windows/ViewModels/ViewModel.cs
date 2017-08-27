@@ -10,11 +10,11 @@ namespace XyrusWorx.Windows.ViewModels
 	public class ViewModel : INotifyPropertyChanged
 	{
 		[IgnoreDataMember]
-		private readonly IScope mNotificationSupressionScope;
+		private IScope mNotificationSupressionScope;
 
 		public ViewModel()
 		{
-			mNotificationSupressionScope = new Scope(() => { }, () => NotifyChange(string.Empty));
+			Setup();
 		}
 
 		[field: IgnoreDataMember, NonSerialized]
@@ -23,6 +23,11 @@ namespace XyrusWorx.Windows.ViewModels
 		[NotNull]
 		public IScope EnterSupressNotificationScope()
 		{
+			if (mNotificationSupressionScope == null)
+			{
+				Setup();
+			}
+			
 			return mNotificationSupressionScope.Enter();
 		}
 		public void NotifyChange(string property = null)
@@ -33,6 +38,11 @@ namespace XyrusWorx.Windows.ViewModels
 		[NotifyPropertyChangedInvocator]
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
+			if (mNotificationSupressionScope == null)
+			{
+				Setup();
+			}
+			
 			if (mNotificationSupressionScope.IsInScope)
 			{
 				return;
@@ -43,6 +53,11 @@ namespace XyrusWorx.Windows.ViewModels
 		}
 
 		public static event PropertyChangedEventHandler GlobalPropertyChanged;
+		
+		private void Setup()
+		{
+			mNotificationSupressionScope = new Scope(() => { }, () => NotifyChange(string.Empty));
+		}
 	}
 
 	[PublicAPI, DataContract]
