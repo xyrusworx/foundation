@@ -88,7 +88,7 @@ namespace XyrusWorx.Data
 		public IReadOnlyList<string> Columns => mColumnNames;
 		public IReadOnlyList<object> Values => mColumnValues;
 
-		public int RowIndex { get; internal set; }
+		public int RowIndex { get; set; }
 		public bool ThrowOnTypeMismatch { get; set; } = true;
 
 		public bool IsDbNull(int columnIndex) => mIsNull[GetColumnHandle(columnIndex)];

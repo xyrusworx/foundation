@@ -14,7 +14,7 @@ namespace XyrusWorx.Data
 		private readonly IDbConnection mConnection;
 		private readonly Stack<DataTransaction> mTransaction;
 
-		internal DataConnection([NotNull] IDbConnection connection)
+		public DataConnection([NotNull] IDbConnection connection)
 		{
 			if (connection == null)
 			{
