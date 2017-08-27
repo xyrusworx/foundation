@@ -5,6 +5,7 @@ using XyrusWorx.Diagnostics;
 
 namespace XyrusWorx.Runtime
 {
+
 	[PublicAPI]
 	public abstract class ConsoleApplication : Application
 	{
