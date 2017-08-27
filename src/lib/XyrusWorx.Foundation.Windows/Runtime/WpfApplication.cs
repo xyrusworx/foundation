@@ -12,9 +12,9 @@ namespace XyrusWorx.Windows.Runtime
 	[PublicAPI]
 	[SuppressMessage("ReSharper", "ConstantConditionalAccessQualifier")]
 	[SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-	public abstract class ApplicationController : Application, IDialogService, IExceptionHandlerService
+	public abstract class WpfApplication : Application, IDialogService, IExceptionHandlerService
 	{
-		protected ApplicationController()
+		protected WpfApplication()
 		{
 			WaitHandler = new WpfWaitHandler();
 
@@ -23,17 +23,17 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public IApplicationRuntime Runtime { get; internal set; }
+		public IApplicationHost Host { get; internal set; }
 
 		[NotNull]
-		public IMessageBox Dialog => new WindowsMessageBox(Runtime);
+		public IMessageBox Dialog => new WindowsMessageBox(Host);
 
 		[ContractAnnotation("=> halt")]
 		public void Shutdown(int exitCode)
 		{
 			try
 			{
-				Runtime.GetDispatcher()?.Invoke(() => Runtime.Shutdown(1));
+				Host.GetDispatcher()?.Invoke(() => Host.Shutdown(1));
 			}
 			catch
 			{
@@ -43,8 +43,8 @@ namespace XyrusWorx.Windows.Runtime
 			Environment.Exit(1);
 		}
 
-		public FrameworkElement GetView() => Runtime?.View;
-		public ViewModel GetViewModel() => Runtime?.ViewModel;
+		public FrameworkElement GetView() => Host?.View;
+		public ViewModel GetViewModel() => Host?.ViewModel;
 
 		public T GetView<T>() where T : FrameworkElement => GetView().CastTo<T>();
 		public T GetViewModel<T>() where T: class => GetViewModel().CastTo<T>();

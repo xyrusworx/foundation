@@ -6,7 +6,7 @@ using XyrusWorx.Windows.ViewModels;
 namespace XyrusWorx.Windows.Runtime 
 {
 	[PublicAPI]
-	public interface IApplicationRuntime 
+	public interface IApplicationHost 
 	{
 		[CanBeNull]
 		ViewModel ViewModel { get; }
@@ -15,7 +15,7 @@ namespace XyrusWorx.Windows.Runtime
 		FrameworkElement View { get; }
 		
 		[NotNull]
-		ApplicationController Controller { get; }
+		XyrusWorx.Runtime.Application Application { get; }
 		
 		[CanBeNull]
 		Dispatcher GetDispatcher();

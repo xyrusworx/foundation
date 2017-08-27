@@ -13,7 +13,7 @@ namespace XyrusWorx.Windows
 	public static class Execution
 	{
 		[NotNull]
-		public static IApplicationRuntime Start([NotNull] Type controllerType, [NotNull] Dispatcher dispatcher, IServiceLocator serviceLocator = null)
+		public static IApplicationHost Start([NotNull] Type controllerType, [NotNull] Dispatcher dispatcher, IServiceLocator serviceLocator = null)
 		{
 			if (controllerType == null)
 			{
@@ -25,15 +25,15 @@ namespace XyrusWorx.Windows
 				throw new ArgumentNullException(nameof(dispatcher));
 			}
 
-			var controllerInstance = (serviceLocator ?? ServiceLocator.Default).CreateInstance(controllerType).CastTo<ApplicationController>();
+			var controllerInstance = (serviceLocator ?? ServiceLocator.Default).CreateInstance(controllerType).CastTo<WpfApplication>();
 			if (controllerInstance == null)
 			{
-				throw new ArgumentException($"The type \"{controllerType}\" can't be cast into an {nameof(ApplicationController)}.");
+				throw new ArgumentException($"The type \"{controllerType}\" can't be cast into an {nameof(WpfApplication)}.");
 			}
 			
-			var runtime = new ConstructedRuntime(dispatcher, controllerInstance);
+			var runtime = new ConstructedHost(dispatcher, controllerInstance);
 
-			controllerInstance.Runtime = runtime;
+			controllerInstance.Host = runtime;
 			
 			return runtime;
 		}
@@ -60,12 +60,12 @@ namespace XyrusWorx.Windows
 			dispatcher.Invoke(action, priority);
 		}
 
-		class ConstructedRuntime : IApplicationRuntime
+		class ConstructedHost : IApplicationHost
 		{
 			private readonly Dispatcher mDispatcher;
-			private readonly ApplicationController mController;
+			private readonly WpfApplication mController;
 
-			public ConstructedRuntime([NotNull] Dispatcher dispatcher, [NotNull] ApplicationController controller)
+			public ConstructedHost([NotNull] Dispatcher dispatcher, [NotNull] WpfApplication controller)
 			{
 				if (dispatcher == null)
 				{
@@ -80,7 +80,7 @@ namespace XyrusWorx.Windows
 				mController = controller;
 			}
 			
-			public ApplicationController Controller => mController;
+			public XyrusWorx.Runtime.Application Application => mController;
 			public ViewModel ViewModel { get; set; }
 			public FrameworkElement View { get; set; }
 

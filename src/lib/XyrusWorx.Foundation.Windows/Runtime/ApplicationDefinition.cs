@@ -12,7 +12,7 @@ using Application = System.Windows.Application;
 namespace XyrusWorx.Windows.Runtime
 {
 	[PublicAPI]
-	public class ApplicationDefinition : Application, IApplicationRuntime
+	public class ApplicationDefinition : Application, IApplicationHost
 	{
 		private readonly Scope mRunningScope;
 
@@ -22,7 +22,7 @@ namespace XyrusWorx.Windows.Runtime
 
 		private IOperation mApplication;
 		private ViewModel mViewModel;
-		private ApplicationController mApplicationController;
+		private WpfApplication mApplicationController;
 
 		public ApplicationDefinition()
 		{
@@ -106,13 +106,13 @@ namespace XyrusWorx.Windows.Runtime
 				return;
 			}
 
-			var specificApplication = mApplication.CastTo<ApplicationController>();
+			var specificApplication = mApplication.CastTo<WpfApplication>();
 			if (specificApplication != null)
 			{
-				specificApplication.Runtime = this;
+				specificApplication.Host = this;
 				mApplicationController = specificApplication;
 
-				ServiceLocator.Default.Register<IApplicationRuntime>(this);
+				ServiceLocator.Default.Register<IApplicationHost>(this);
 			}
 
 			ViewModel.GlobalPropertyChanged += OnGlobalPropertyChanged;
@@ -142,22 +142,22 @@ namespace XyrusWorx.Windows.Runtime
 			MainWindow = null;
 		}
 
-		ViewModel IApplicationRuntime.ViewModel => mViewModel;
-		FrameworkElement IApplicationRuntime.View => MainWindow;
-		ApplicationController IApplicationRuntime.Controller => mApplicationController;
+		ViewModel IApplicationHost.ViewModel => mViewModel;
+		FrameworkElement IApplicationHost.View => MainWindow;
+		XyrusWorx.Runtime.Application IApplicationHost.Application => mApplicationController;
 
-		Dispatcher IApplicationRuntime.GetDispatcher()
+		Dispatcher IApplicationHost.GetDispatcher()
 		{
 			return Dispatcher;
 		}
 
 		private void OnGlobalThreadException(object sender, OperationUnhandledExceptionEventArgs e)
 		{
-			e.Handled = mApplication?.CastTo<ApplicationController>()?.GlobalExceptionHandler(e.Exception) ?? false;
+			e.Handled = mApplication?.CastTo<WpfApplication>()?.GlobalExceptionHandler(e.Exception) ?? false;
 		}
 		private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			e.Handled = mApplication?.CastTo<ApplicationController>()?.GlobalExceptionHandler(e.Exception) ?? false;
+			e.Handled = mApplication?.CastTo<WpfApplication>()?.GlobalExceptionHandler(e.Exception) ?? false;
 		}
 		private void OnGlobalPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{

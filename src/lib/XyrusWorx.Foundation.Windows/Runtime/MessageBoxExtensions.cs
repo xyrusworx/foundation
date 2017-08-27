@@ -100,7 +100,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] ApplicationController application)
+		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] WpfApplication application)
 		{
 			if (definition == null)
 			{
@@ -112,7 +112,7 @@ namespace XyrusWorx.Windows.Runtime
 				throw new ArgumentNullException(nameof(application));
 			}
 
-			var mainWindow = application.Runtime.View as Window;
+			var mainWindow = application.Host.View as Window;
 			if (mainWindow != null)
 			{
 				return definition.Owner(mainWindow);
@@ -122,19 +122,19 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] IApplicationRuntime runtime)
+		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] IApplicationHost host)
 		{
 			if (definition == null)
 			{
 				throw new ArgumentNullException(nameof(definition));
 			}
 
-			if (runtime == null)
+			if (host == null)
 			{
-				throw new ArgumentNullException(nameof(runtime));
+				throw new ArgumentNullException(nameof(host));
 			}
 
-			var mainWindow = runtime.View as Window;
+			var mainWindow = host.View as Window;
 			if (mainWindow != null)
 			{
 				return definition.Owner(mainWindow);

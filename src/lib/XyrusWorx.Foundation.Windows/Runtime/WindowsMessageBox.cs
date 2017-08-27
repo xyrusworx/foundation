@@ -8,7 +8,7 @@ namespace XyrusWorx.Windows.Runtime
 	[PublicAPI]
 	public class WindowsMessageBox : IMessageBox, IAsyncMessageBox
 	{
-		private readonly IApplicationRuntime mApplication;
+		private readonly IApplicationHost mApplication;
 
 		private string mTitle;
 		private string mMessage;
@@ -18,7 +18,7 @@ namespace XyrusWorx.Windows.Runtime
 		public WindowsMessageBox()
 		{
 		}
-		internal WindowsMessageBox([CanBeNull] IApplicationRuntime application) : this()
+		public WindowsMessageBox([CanBeNull] IApplicationHost application) : this()
 		{
 			mApplication = application;
 		}
