@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using JetBrains.Annotations;
 
 namespace XyrusWorx.Runtime
@@ -57,5 +60,61 @@ namespace XyrusWorx.Runtime
 
 		[NotNull]
 		public static T CreateInstance<T>([NotNull] this IServiceLocator serviceLocator) => (T)serviceLocator.CreateInstance(typeof(T));
+
+		public static void AutoRegister([NotNull] this IServiceLocator serviceLocator, [NotNull] Assembly assembly, [NotNull] Type baseType, params Type[] additionalBaseTypes)
+			=> AutoRegister(serviceLocator, assembly, (additionalBaseTypes ?? new Type[0]).Prepend(baseType));
+		
+		public static void AutoRegister([NotNull] this IServiceLocator serviceLocator, [NotNull] Assembly assembly, [NotNull] IEnumerable<Type> baseTypes)
+		{
+			if (serviceLocator == null)
+			{
+				throw new ArgumentNullException(nameof(serviceLocator));
+			}
+			
+			if (assembly == null)
+			{
+				throw new ArgumentNullException(nameof(assembly));
+			}
+			
+			if (baseTypes == null)
+			{
+				throw new ArgumentNullException(nameof(baseTypes));
+			}
+
+			var templates =
+				from type in assembly.GetLoadableTypes()
+
+				where !type.IsAbstract && !type.IsInterface
+				where baseTypes.Any(x => x.IsAssignableFrom(type))
+
+				let isSingleton = type.GetCustomAttribute<SingletonAttribute>() != null
+				let interfaceList = type.GetInterfaces()
+				let interfaceAttribute = type.GetCustomAttribute<ServiceInterfaceAttribute>()
+				
+				let significantInterface = 
+					interfaceAttribute != null ? interfaceAttribute.InterfaceType:
+					interfaceList.Length == 1 ? interfaceList[1]: 
+					null
+				
+				select new
+				{
+					Type = type,
+					IsSingleton = isSingleton,
+					Interface = significantInterface ?? type
+				};
+			
+			foreach (var template in templates)
+			{
+				if (template.IsSingleton)
+				{
+					ServiceLocator.Default.RegisterSingleton(template.Interface, template.Type);
+				}
+				else
+				{
+					ServiceLocator.Default.Register(template.Interface, template.Type);
+				}
+			}
+		}
 	}
+
 }
