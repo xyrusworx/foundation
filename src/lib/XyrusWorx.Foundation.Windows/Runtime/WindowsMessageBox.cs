@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using JetBrains.Annotations;
 using XyrusWorx.Runtime;
-using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -148,24 +147,22 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		private MessageBoxResult Display(MessageBoxButton button, MessageBoxImage image)
 		{
-			var dispatcher = mApplication?.GetDispatcher() ?? Application.Current?.Dispatcher;
 			var function = Compile(button, image);
 
-			if (dispatcher != null)
+			if (mApplication != null)
 			{
-				return dispatcher.Invoke(function);
+				return mApplication.Execute(function);
 			}
 
 			return function();
 		}
 		private async Task<MessageBoxResult> DisplayAsync(MessageBoxButton button, MessageBoxImage image)
 		{
-			var dispatcher = mApplication?.GetDispatcher() ?? Application.Current?.Dispatcher;
 			var function = Compile(button, image);
 
-			if (dispatcher != null)
+			if (mApplication != null)
 			{
-				return await dispatcher.InvokeAsync(function);
+				return await mApplication.ExecuteAsync(function);
 			}
 
 			return await Task.Run(() => function());

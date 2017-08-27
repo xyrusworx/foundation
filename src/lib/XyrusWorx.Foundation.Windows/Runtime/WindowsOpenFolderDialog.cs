@@ -7,7 +7,6 @@ using System.Windows.Interop;
 using JetBrains.Annotations;
 using XyrusWorx.Runtime;
 using XyrusWorx.Windows.Native;
-using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -148,10 +147,9 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		async Task<Result<string>> IAsyncOpenFolderDialog.Ask()
 		{
-			var dispatcher = mApplication?.GetDispatcher() ?? Application.Current?.Dispatcher;
-			if (dispatcher != null)
+			if (mApplication != null)
 			{
-				return await dispatcher.InvokeAsync(Ask);
+				return await mApplication.ExecuteAsync(Ask);
 			}
 
 			return await Task.Run(() => Ask());

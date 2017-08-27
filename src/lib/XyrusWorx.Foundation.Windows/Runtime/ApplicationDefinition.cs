@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -12,7 +13,7 @@ using Application = System.Windows.Application;
 namespace XyrusWorx.Windows.Runtime
 {
 	[PublicAPI]
-	public class ApplicationDefinition : Application, IApplicationHost
+	public class ApplicationDefinition : Application, IWindowsApplicationHost
 	{
 		private readonly Scope mRunningScope;
 
@@ -142,13 +143,47 @@ namespace XyrusWorx.Windows.Runtime
 			MainWindow = null;
 		}
 
-		ViewModel IApplicationHost.ViewModel => mViewModel;
-		FrameworkElement IApplicationHost.View => MainWindow;
-		XyrusWorx.Runtime.Application IApplicationHost.Application => mApplicationController;
+		public ViewModel ViewModel => mViewModel;
+		public FrameworkElement View => MainWindow;
+		public XyrusWorx.Runtime.Application Application => mApplicationController;
 
-		Dispatcher IApplicationHost.GetDispatcher()
+		public void Execute(Action action, TaskPriority priority = TaskPriority.Normal)
 		{
-			return Dispatcher;
+			if (Dispatcher == null)
+			{
+				action();
+				return;
+			}
+			
+			Dispatcher.Invoke(action, (DispatcherPriority)(int)priority);
+		}
+		public T Execute<T>(Func<T> func, TaskPriority priority = TaskPriority.Normal)
+		{
+			if (Dispatcher == null)
+			{
+				return func();
+			}
+			
+			return Dispatcher.Invoke(func, (DispatcherPriority)(int)priority);
+		}
+		public async Task ExecuteAsync(Action action, TaskPriority priority = TaskPriority.Normal)
+		{
+			if (Dispatcher == null)
+			{
+				await Task.Run(action);
+				return;
+			}
+			
+			await Dispatcher.InvokeAsync(action, (DispatcherPriority)(int)priority);
+		}
+		public async Task<T> ExecuteAsync<T>(Func<T> func, TaskPriority priority = TaskPriority.Normal)
+		{
+			if (Dispatcher == null)
+			{
+				return await Task.Run(func);
+			}
+			
+			return await Dispatcher.InvokeAsync(func, (DispatcherPriority)(int)priority);
 		}
 
 		private void OnGlobalThreadException(object sender, OperationUnhandledExceptionEventArgs e)

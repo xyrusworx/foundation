@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using Microsoft.Win32;
 using XyrusWorx.Collections;
 using XyrusWorx.Runtime;
-using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -84,10 +83,9 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		async Task<Result<string>> IAsyncSaveFileDialog.Ask()
 		{
-			var dispatcher = mApplication?.GetDispatcher() ?? Application.Current?.Dispatcher;
-			if (dispatcher != null)
+			if (mApplication != null)
 			{
-				return await dispatcher.InvokeAsync(Ask);
+				return await mApplication.ExecuteAsync(Ask);
 			}
 
 			return await Task.Run(() => Ask());

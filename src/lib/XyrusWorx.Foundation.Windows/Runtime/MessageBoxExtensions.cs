@@ -123,7 +123,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] IApplicationHost host)
+		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] IWindowsApplicationHost host)
 		{
 			if (definition == null)
 			{

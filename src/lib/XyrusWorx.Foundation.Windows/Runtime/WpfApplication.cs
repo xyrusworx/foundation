@@ -23,7 +23,7 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public IApplicationHost Host { get; internal set; }
+		public IWindowsApplicationHost Host { get; internal set; }
 
 		[NotNull]
 		public IMessageBox Dialog => new WindowsMessageBox(Host);
@@ -33,7 +33,7 @@ namespace XyrusWorx.Windows.Runtime
 		{
 			try
 			{
-				Host.GetDispatcher()?.Invoke(() => Host.Shutdown(1));
+				Host.Execute(() => Host.Shutdown(1));
 			}
 			catch
 			{
@@ -43,8 +43,8 @@ namespace XyrusWorx.Windows.Runtime
 			Environment.Exit(1);
 		}
 
-		public FrameworkElement GetView() => Host?.View as FrameworkElement;
-		public ViewModel GetViewModel() => Host?.ViewModel as ViewModel;
+		public FrameworkElement GetView() => Host?.View;
+		public ViewModel GetViewModel() => Host?.ViewModel;
 
 		public T GetView<T>() where T : FrameworkElement => GetView().CastTo<T>();
 		public T GetViewModel<T>() where T: class => GetViewModel().CastTo<T>();
