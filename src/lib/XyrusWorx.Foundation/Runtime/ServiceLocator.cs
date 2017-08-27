@@ -142,7 +142,7 @@ namespace XyrusWorx.Runtime
 			{
 				var builder = new StringBuilder();
 
-				builder.AppendLine($"Resolving a service for type \"{type.FullName}\" failed. because a cyclic dependency has been detected:");
+				builder.AppendLine($"Resolving a service for type \"{type.FullName}\" failed because a cyclic dependency has been detected:");
 				builder.AppendLine($"    --> {type.FullName}");
 
 				foreach (var node in path)
