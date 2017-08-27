@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace XyrusWorx.Windows.Runtime
+namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
 	public interface IMessageBox
@@ -31,7 +30,7 @@ namespace XyrusWorx.Windows.Runtime
 		IMessageBox Error(string message);
 
 		[NotNull]
-		IMessageBox Owner([NotNull] Window window);
+		IMessageBox Owner(object view);
 
 		void Display();
 		bool Ask();

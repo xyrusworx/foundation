@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using JetBrains.Annotations;
+using XyrusWorx.Runtime;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -98,7 +99,7 @@ namespace XyrusWorx.Windows.Runtime
 
 			return definition.Error((result?.HasError ?? false) ? null : result?.ErrorDescription);
 		}
-
+		
 		[NotNull]
 		public static IMessageBox Owner([NotNull] this IMessageBox definition, [NotNull] WpfApplication application)
 		{

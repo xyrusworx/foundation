@@ -43,8 +43,8 @@ namespace XyrusWorx.Windows.Runtime
 			Environment.Exit(1);
 		}
 
-		public FrameworkElement GetView() => Host?.View;
-		public ViewModel GetViewModel() => Host?.ViewModel;
+		public FrameworkElement GetView() => Host?.View as FrameworkElement;
+		public ViewModel GetViewModel() => Host?.ViewModel as ViewModel;
 
 		public T GetView<T>() where T : FrameworkElement => GetView().CastTo<T>();
 		public T GetViewModel<T>() where T: class => GetViewModel().CastTo<T>();

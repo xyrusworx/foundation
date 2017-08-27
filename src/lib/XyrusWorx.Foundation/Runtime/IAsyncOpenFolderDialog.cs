@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.Windows.Runtime
+namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
-	public interface IAsyncOpenFileDialog
+	public interface IAsyncOpenFolderDialog
 	{
 		[NotNull]
 		Task<Result<string>> Ask();

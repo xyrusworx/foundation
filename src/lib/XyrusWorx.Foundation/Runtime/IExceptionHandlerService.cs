@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.Windows.Runtime
+namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
 	public interface IExceptionHandlerService

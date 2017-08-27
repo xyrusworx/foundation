@@ -3,8 +3,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using JetBrains.Annotations;
+using XyrusWorx.Runtime;
 using XyrusWorx.Windows.Native;
+using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -28,7 +31,7 @@ namespace XyrusWorx.Windows.Runtime
 		private Environment.SpecialFolder mRoot = Environment.SpecialFolder.Desktop;
 
 		private string mPrompt;
-		private Window mOwner;
+		private object mOwner;
 		private string mPath;
 
 		public WindowsOpenFolderDialog()
@@ -59,9 +62,9 @@ namespace XyrusWorx.Windows.Runtime
 			mRoot = specialFolder;
 			return this;
 		}
-		public IOpenFolderDialog Owner(Window window)
+		public IOpenFolderDialog Owner(object view)
 		{
-			mOwner = window;
+			mOwner = view;
 			return this;
 		}
 
@@ -70,10 +73,14 @@ namespace XyrusWorx.Windows.Runtime
 			IntPtr pidlRoot;
 			IntPtr hWndOwner;
 
-			if (mOwner != null)
+			if (mOwner is Window window)
 			{
-				var iw = new System.Windows.Interop.WindowInteropHelper(mOwner);
+				var iw = new WindowInteropHelper(window);
 				hWndOwner = iw.Handle;
+			}
+			else if (mOwner is IWin32Window win32Window)
+			{
+				hWndOwner = win32Window.Handle;
 			}
 			else
 			{

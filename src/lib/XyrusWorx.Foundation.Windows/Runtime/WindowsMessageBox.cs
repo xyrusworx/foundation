@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Windows;
 using JetBrains.Annotations;
+using XyrusWorx.Runtime;
+using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -13,7 +15,7 @@ namespace XyrusWorx.Windows.Runtime
 		private string mTitle;
 		private string mMessage;
 		private MessageBoxImage mClass;
-		private Window mOwner;
+		private object mOwner;
 
 		public WindowsMessageBox()
 		{
@@ -66,14 +68,9 @@ namespace XyrusWorx.Windows.Runtime
 			mClass = MessageBoxImage.Error;
 			return this;
 		}
-		public IMessageBox Owner(Window window)
+		public IMessageBox Owner(object view)
 		{
-			if (window == null)
-			{
-				throw new ArgumentNullException(nameof(window));
-			}
-
-			mOwner = window;
+			mOwner = view;
 			return this;
 		}
 
@@ -135,9 +132,9 @@ namespace XyrusWorx.Windows.Runtime
 					break;
 			}
 
-			var function = new Func<MessageBoxResult>(() => MessageBox.Show(mOwner, mMessage, mTitle.NormalizeNull() ?? mOwner.Title.NormalizeNull() ?? fallbackTitle, button, image));
+			var function = new Func<MessageBoxResult>(() => MessageBox.Show((Window)mOwner, mMessage, mTitle.NormalizeNull() ?? ((Window)mOwner).Title.NormalizeNull() ?? fallbackTitle, button, image));
 
-			if (mOwner == null)
+			if (!(mOwner is Window))
 			{
 				function = () => MessageBox.Show(mMessage, mTitle.NormalizeNull() ?? fallbackTitle, button, mClass);
 			}

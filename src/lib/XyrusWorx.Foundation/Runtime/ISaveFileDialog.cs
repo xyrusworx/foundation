@@ -1,7 +1,6 @@
-using System.Windows;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.Windows.Runtime
+namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
 	public interface ISaveFileDialog
@@ -16,7 +15,7 @@ namespace XyrusWorx.Windows.Runtime
 		ISaveFileDialog Format([NotNull] string pattern, string displayName);
 
 		[NotNull]
-		ISaveFileDialog Owner(Window window);
+		ISaveFileDialog Owner(object view);
 
 		[NotNull]
 		IAsyncSaveFileDialog Async { get; }

@@ -1,7 +1,6 @@
-using System.Windows;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.Windows.Runtime
+namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
 	public interface IOpenFileDialog
@@ -16,7 +15,7 @@ namespace XyrusWorx.Windows.Runtime
 		IOpenFileDialog Format([NotNull] string pattern, string displayName);
 
 		[NotNull]
-		IOpenFileDialog Owner(Window window);
+		IOpenFileDialog Owner(object view);
 
 		[NotNull]
 		IAsyncOpenFileDialog Async { get; }

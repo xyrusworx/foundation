@@ -6,6 +6,8 @@ using System.Windows;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 using XyrusWorx.Collections;
+using XyrusWorx.Runtime;
+using Application = System.Windows.Application;
 
 namespace XyrusWorx.Windows.Runtime
 {
@@ -18,7 +20,7 @@ namespace XyrusWorx.Windows.Runtime
 
 		private string mTitle;
 		private string mDirectory;
-		private Window mOwner;
+		private object mOwner;
 
 		public WindowsSaveFileDialog()
 		{
@@ -56,9 +58,9 @@ namespace XyrusWorx.Windows.Runtime
 
 			return this;
 		}
-		public ISaveFileDialog Owner(Window window)
+		public ISaveFileDialog Owner(object view)
 		{
-			mOwner = window;
+			mOwner = view;
 			return this;
 		}
 
@@ -71,7 +73,7 @@ namespace XyrusWorx.Windows.Runtime
 			dialog.Filter = string.Join("|", mFormats.Select(x => $"{x.Value.NormalizeNull().TryTransform(y => $"{y} ({x.Key})") ?? x.Key}|{x.Key}"));
 			dialog.Filter += (string.IsNullOrEmpty(dialog.Filter) ? "" : "|") + "All files (*.*)|*.*";
 
-			var result = mOwner != null ? dialog.ShowDialog(mOwner) : dialog.ShowDialog();
+			var result = mOwner is Window w ? dialog.ShowDialog(w) : dialog.ShowDialog();
 			if (!result.HasValue || !result.Value)
 			{
 				return Result.CreateError<Result<string>>(new OperationCanceledException());

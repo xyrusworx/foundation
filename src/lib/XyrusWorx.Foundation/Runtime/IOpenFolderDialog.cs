@@ -1,8 +1,7 @@
 using System;
-using System.Windows;
 using JetBrains.Annotations;
 
-namespace XyrusWorx.Windows.Runtime
+namespace XyrusWorx.Runtime
 {
 	[PublicAPI]
 	public interface IOpenFolderDialog
@@ -17,7 +16,7 @@ namespace XyrusWorx.Windows.Runtime
 		IOpenFolderDialog RootFolder(Environment.SpecialFolder specialFolder);
 
 		[NotNull]
-		IOpenFolderDialog Owner(Window window);
+		IOpenFolderDialog Owner(object view);
 
 		[NotNull]
 		IAsyncOpenFolderDialog Async { get; }
