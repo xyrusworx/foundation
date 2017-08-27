@@ -150,6 +150,30 @@ namespace XyrusWorx.Collections
 				yield return item;
 			}
 		}
+		
+		[NotNull]
+		public static IEnumerable<T> Append<T>([NotNull] this IEnumerable<T> instance, [NotNull] params T[] items)
+		{
+			if (instance == null)
+			{
+				throw new ArgumentNullException(nameof(instance));
+			}
+
+			if (items == null)
+			{
+				throw new ArgumentNullException(nameof(items));
+			}
+
+			foreach (var item in instance)
+			{
+				yield return item;
+			}
+			
+			foreach(var item in items)
+			{
+				yield return item;
+			}
+		}
 
 		public static bool AddOrUpdate<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> instance, TKey key, TValue value)
 		{
