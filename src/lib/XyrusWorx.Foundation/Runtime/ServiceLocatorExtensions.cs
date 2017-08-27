@@ -108,11 +108,11 @@ namespace XyrusWorx.Runtime
 			{
 				if (template.IsSingleton)
 				{
-					ServiceLocator.Default.RegisterSingleton(template.Interface, template.Type);
+					serviceLocator.RegisterSingleton(template.Interface, template.Type);
 				}
 				else
 				{
-					ServiceLocator.Default.Register(template.Interface, template.Type);
+					serviceLocator.Register(template.Interface, template.Type);
 				}
 			}
 		}
