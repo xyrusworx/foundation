@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 
 namespace XyrusWorx
@@ -9,14 +8,9 @@ namespace XyrusWorx
 	{
 		private readonly string mRawData;
 
-		public StringKey([NotNull] string rawData)
+		public StringKey(string rawData)
 		{
-			if (string.IsNullOrEmpty(rawData))
-			{
-				throw new ArgumentNullException(nameof(rawData));
-			}
-
-			mRawData = rawData;
+			mRawData = rawData.NormalizeNull();
 		}
 
 		public string RawData => mRawData;
