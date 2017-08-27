@@ -8,7 +8,8 @@ namespace XyrusWorx.Data
 	[PublicAPI]
 	public interface IBulkReader
 	{
-		bool ThrowOnTypeMismatch { get; set; }
+		TypeMismatchBehavior TypeMismatchBehavior { get; set; }
+		FieldNotFoundBehavior FieldNotFoundBehavior { get; set; }
 
 		[NotNull]
 		IEnumerable<DataRecord> ReadAll();

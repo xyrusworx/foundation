@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using XyrusWorx.Collections;
-using XyrusWorx.IO;
 
 namespace XyrusWorx.Data
 {
+
 	[PublicAPI]
-	public class DataRecord : DynamicObject, IKeyValueStore
+	public class DataRecord : DynamicObject
 	{
 		private readonly object mLock = new object();
 		private readonly Dictionary<StringKey, int> mColumnIndices;
 		private readonly List<string> mColumnNames;
 		private readonly List<object> mColumnValues;
 		private readonly List<bool> mIsNull;
+		private IFormatProvider mCulture = CultureInfo.CurrentCulture;
 
 		private DataRecord()
 		{
@@ -38,7 +40,7 @@ namespace XyrusWorx.Data
 				.GetType()
 				.GetTypeInfo()
 				.DeclaredProperties
-				.Where(x => x.CanRead && x.GetMethod.IsPublic)
+				.Where(x => x.CanRead && x.GetMethod.IsPublic && x.GetMethod.GetParameters().Length == 0)
 				.ToArray();
 
 			for (var i = 0; i < properties.Length; i++)
@@ -46,7 +48,7 @@ namespace XyrusWorx.Data
 				var property = properties[i];
 				var value = property.GetValue(obj);
 
-				mColumnIndices.AddOrUpdate(property.Name.AsKey().Normalize(), i);
+				mColumnIndices.AddOrUpdate(new StringKey(property.Name).Normalize(), i);
 				mColumnNames.Add(property.Name);
 				mColumnValues.Add(value);
 				mIsNull.Add(value == null);
@@ -61,7 +63,7 @@ namespace XyrusWorx.Data
 
 			for (var i = 0; i < nativeRecord.FieldCount; i++)
 			{
-				mColumnIndices.AddOrUpdate(nativeRecord.GetName(i).AsKey().Normalize(), i);
+				mColumnIndices.AddOrUpdate(new StringKey(nativeRecord.GetName(i)).Normalize(), i);
 				mColumnNames.Add(nativeRecord.GetName(i));
 				mColumnValues.Add(nativeRecord.GetValue(i));
 				mIsNull.Add(nativeRecord.IsDBNull(i));
@@ -78,7 +80,7 @@ namespace XyrusWorx.Data
 
 			for (var i = 0; i < keyArray.Length; i++)
 			{
-				mColumnIndices.AddOrUpdate(keyArray[i].AsKey().Normalize(), i);
+				mColumnIndices.AddOrUpdate(new StringKey(keyArray[i]).Normalize(), i);
 				mColumnNames.Add(keyArray[i]);
 				mColumnValues.Add(dictionary[keyArray[i]]);
 				mIsNull.Add(dictionary[keyArray[i]] == null);
@@ -88,15 +90,47 @@ namespace XyrusWorx.Data
 		public IReadOnlyList<string> Columns => mColumnNames;
 		public IReadOnlyList<object> Values => mColumnValues;
 
-		public int RowIndex { get; set; }
-		public bool ThrowOnTypeMismatch { get; set; } = true;
+		public int RowIndex { get; internal set; }
+		
+		public TypeMismatchBehavior TypeMismatchBehavior { get; set; }
+		public FieldNotFoundBehavior FieldNotFoundBehavior { get; set; }
 
-		public bool IsDbNull(int columnIndex) => mIsNull[GetColumnHandle(columnIndex)];
-		public bool IsDbNull(string columnName) => mIsNull[GetColumnHandle(columnName)];
+		[NotNull]
+		public IFormatProvider Culture
+		{
+			get => mCulture;
+			set => mCulture = value ?? throw new ArgumentNullException(nameof(value));
+		}
+
+		public bool IsDbNull(int columnIndex)
+		{
+			var i = GetColumnHandle(columnIndex);
+			if (i < 0)
+			{
+				return true;
+			}
+			
+			return mIsNull[i];
+		}
+		public bool IsDbNull(string columnName)
+		{
+			var i = GetColumnHandle(columnName);
+			if (i < 0)
+			{
+				return true;
+			}
+			
+			return mIsNull[i];
+		}
 
 		public object GetValue(int columnIndex)
 		{
 			var handle = GetColumnHandle(columnIndex);
+			if (handle < 0)
+			{
+				return null;
+			}
+			
 			if (mIsNull[handle])
 			{
 				return null;
@@ -107,6 +141,11 @@ namespace XyrusWorx.Data
 		public object GetValue(string columnName)
 		{
 			var handle = GetColumnHandle(columnName);
+			if (handle < 0)
+			{
+				return null;
+			}
+			
 			if (mIsNull[handle])
 			{
 				return null;
@@ -115,9 +154,14 @@ namespace XyrusWorx.Data
 			return mColumnValues[handle];
 		}
 
-		public T? GetValue<T>(int columnIndex) where T: struct
+		public T? GetValue<T>(int columnIndex) where T : struct
 		{
 			var i = GetColumnHandle(columnIndex);
+			if (i < 0)
+			{
+				return null;
+			}
+			
 			if (IsDbNull(i))
 			{
 				return null;
@@ -126,35 +170,59 @@ namespace XyrusWorx.Data
 			var v = GetValue(i);
 			if (v is T)
 			{
-				return (T) v;
+				return (T)v;
 			}
 
-			if (ThrowOnTypeMismatch)
+			switch (TypeMismatchBehavior)
 			{
-				throw new InvalidCastException($"The column \"{mColumnNames[i]}\" contains a value of type \"{v?.GetType()??typeof(object)}\" but a value of type \"{typeof(T)}\" was expected.");
+				case TypeMismatchBehavior.Convert:
+					if ((v?.ToString()).TryDeserialize(typeof(T), out var rv, Culture))
+					{
+						return (T)rv;
+					}
+					return null;
+				case TypeMismatchBehavior.ResultNull:
+					return null;
+				default:
+					throw new InvalidCastException($"The field \"{mColumnNames[i]}\" contains a value of type \"{v?.GetType() ?? typeof(object)}\" but a value of type \"{typeof(T)}\" was required.");
 			}
-
-			return null;
 		}
-		public T? GetValue<T>(string columnName) where T: struct
+		public T? GetValue<T>(string columnName) where T : struct
 		{
-			return GetValue<T>(GetColumnHandle(columnName));
+			var i = GetColumnHandle(columnName);
+			if (i < 0)
+			{
+				return null;
+			}
+			
+			return GetValue<T>(i);
 		}
 
 		public string GetString(int columnIndex)
 		{
 			var i = GetColumnHandle(columnIndex);
-			if (IsDbNull(i))
+			if (i < 0)
 			{
 				return null;
 			}
+			
+			return !IsDbNull(i) 
+				? GetValue(i)?.ToString() : 
+				null;
 
-			return GetValue(i)?.ToString();
 		}
 		public string GetString(string columnName)
 		{
-			return GetString(GetColumnHandle(columnName));
+			var i = GetColumnHandle(columnName);
+			if (i < 0)
+			{
+				return null;
+			}
+			
+			return GetString(i);
 		}
+
+		public override IEnumerable<string> GetDynamicMemberNames() => mColumnNames.AsEnumerable();
 
 		public sealed override bool TryGetMember(GetMemberBinder binder, out object result)
 		{
@@ -209,40 +277,33 @@ namespace XyrusWorx.Data
 
 		private int GetColumnHandle(string columnName)
 		{
-			if (string.IsNullOrWhiteSpace(columnName))
+			if (string.IsNullOrWhiteSpace(columnName) || !mColumnIndices.ContainsKey(new StringKey(columnName).Normalize()))
 			{
-				throw new ArgumentNullException(nameof(columnName));
+				switch (FieldNotFoundBehavior)
+				{
+					case FieldNotFoundBehavior.ResultNull:
+						return -1;
+					default:
+						throw new KeyNotFoundException($"The field \"{columnName}\" could not be located.");
+				}
 			}
 
-			if (!mColumnIndices.ContainsKey(columnName.AsKey().Normalize()))
-			{
-				throw new KeyNotFoundException($"The column \"{columnName}\" was not found in the resulting schema of the query.");
-			}
-
-			return mColumnIndices[columnName.AsKey().Normalize()];
+			return mColumnIndices[new StringKey(columnName).Normalize()];
 		}
 		private int GetColumnHandle(int columnIndex)
 		{
 			if (columnIndex < 0 || columnIndex >= mColumnIndices.Count)
 			{
-				throw new ArgumentOutOfRangeException(nameof(columnIndex));
+				switch (FieldNotFoundBehavior)
+				{
+					case FieldNotFoundBehavior.ResultNull:
+						return -1;
+					default:
+						throw new KeyNotFoundException($"The field at position {columnIndex + 1} could not be located.");
+				}
 			}
 
 			return columnIndex;
-		}
-
-		IEnumerable<StringKey> IKeyValueStore.GetKeys() => mColumnNames.Select(x => x.AsKey()).ToArray();
-
-		bool IKeyValueStore.Exists(StringKey key) => mColumnIndices.ContainsKey(key.Normalize());
-		object IKeyValueStore.Read(StringKey key) => GetValue(key.RawData);
-
-		void IKeyValueStore.Write(StringKey key, object value)
-		{
-			throw new NotSupportedException();
-		}
-		void IKeyValueStore.SetDefault(StringKey key, object defaultValue)
-		{
-			throw new NotSupportedException();
 		}
 	}
 }

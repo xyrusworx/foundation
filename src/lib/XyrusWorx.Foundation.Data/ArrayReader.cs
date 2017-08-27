@@ -20,7 +20,9 @@ namespace XyrusWorx.Data
 
 			mData = enumeration;
 		}
-		public bool ThrowOnTypeMismatch { get; set; } = true;
+		
+		public TypeMismatchBehavior TypeMismatchBehavior { get; set; }
+		public FieldNotFoundBehavior FieldNotFoundBehavior { get; set; }
 		
 		public IEnumerable<DataRecord> ReadAll()
 		{
@@ -33,8 +35,11 @@ namespace XyrusWorx.Data
 
 			foreach (var element in mData)
 			{
-				yield return new DataRecord(element) {RowIndex = counter, ThrowOnTypeMismatch = ThrowOnTypeMismatch};
-				counter++;
+				yield return new DataRecord(element) {
+					RowIndex = counter++, 
+					TypeMismatchBehavior = TypeMismatchBehavior, 
+					FieldNotFoundBehavior = FieldNotFoundBehavior
+				};
 			}
 		}
 		public int ReadAll(Action<DataRecord> callback, CancellationToken cancellationToken = default(CancellationToken))
@@ -53,8 +58,11 @@ namespace XyrusWorx.Data
 
 			foreach (var element in mData)
 			{
-				callback(new DataRecord(element) { RowIndex = counter, ThrowOnTypeMismatch = ThrowOnTypeMismatch });
-				counter++;
+				callback(new DataRecord(element) {
+					RowIndex = counter++, 
+					TypeMismatchBehavior = TypeMismatchBehavior, 
+					FieldNotFoundBehavior = FieldNotFoundBehavior
+				});
 			}
 
 			return counter;
