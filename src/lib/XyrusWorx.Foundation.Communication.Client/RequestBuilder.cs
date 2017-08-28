@@ -189,6 +189,12 @@ namespace XyrusWorx.Communication.Client
 		[NotNull]
 		public async Task<WebServiceClientResponse> SendAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
+			var ic = new RequestInterceptorContext(this);
+			foreach (var interceptor in mInterceptors)
+			{
+				interceptor(ic);
+			}
+			
 			var request = mClient.CreateRequest(mVerb, mRequestPath, mParameters);
 
 			SetAuthentication(request);
