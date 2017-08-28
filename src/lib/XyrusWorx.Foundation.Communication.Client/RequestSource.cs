@@ -7,8 +7,9 @@ namespace XyrusWorx.Communication.Client
 	public class RequestSource : Resource
 	{
 		private readonly WebServiceClient mClient;
+		private readonly string mNode;
 
-		public RequestSource(WebServiceClient client)
+		public RequestSource(WebServiceClient client, string node = "api")
 		{
 			if (client == null)
 			{
@@ -16,6 +17,7 @@ namespace XyrusWorx.Communication.Client
 			}
 
 			mClient = client;
+			mNode = node;
 		}
 
 		[NotNull] public RequestBuilder Get([NotNull] string requestPath) => Request(requestPath).Verb(RequestVerb.Get);
@@ -37,7 +39,7 @@ namespace XyrusWorx.Communication.Client
 				throw new ArgumentNullException(nameof(requestPath));
 			}
 
-			var builder =  new RequestBuilder(mClient, $"/api/{requestPath.TrimStart('/')}");
+			var builder =  new RequestBuilder(mClient, $"/{mNode?.Trim('/')}/{requestPath.TrimStart('/')}");
 
 			// ReSharper disable once ConstantNullCoalescingCondition
 			return ConfigureRequest(builder) ?? builder;
