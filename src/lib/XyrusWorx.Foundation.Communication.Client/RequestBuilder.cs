@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -9,6 +11,7 @@ using XyrusWorx.IO;
 
 namespace XyrusWorx.Communication.Client
 {
+
 	[PublicAPI]
 	public class RequestBuilder
 	{
@@ -18,6 +21,7 @@ namespace XyrusWorx.Communication.Client
 		private readonly IKeyValueStore<object> mParameters;
 		private readonly List<Tuple<Func<IWebResult, bool>, Action<WebServiceClientResponse>>> mCallbacks;
 		private readonly List<ServiceClientAuthentication> mAuthentications;
+		private readonly List<Action<RequestInterceptorContext>> mInterceptors;
 		private RequestVerb mVerb;
 		private object mBody;
 
@@ -37,6 +41,7 @@ namespace XyrusWorx.Communication.Client
 			mParameters = new MemoryKeyValueStore();
 			mAuthentications = new List<ServiceClientAuthentication>();
 			mCallbacks = new List<Tuple<Func<IWebResult, bool>, Action<WebServiceClientResponse>>>();
+			mInterceptors = new List<Action<RequestInterceptorContext>>();
 			mClient = client;
 			mRequestPath = requestPath;
 			mVerb = RequestVerb.Get;
@@ -137,8 +142,26 @@ namespace XyrusWorx.Communication.Client
 		}
 
 		[NotNull]
+		public RequestBuilder Interceptor([NotNull] Action<RequestInterceptorContext> callback)
+		{
+			if (callback == null)
+			{
+				throw new ArgumentNullException(nameof(callback));
+			}
+			
+			mInterceptors.Add(callback);
+			return this;
+		} 
+
+		[NotNull]
 		public WebServiceClientResponse Send(CancellationToken cancellationToken = default(CancellationToken))
 		{
+			var ic = new RequestInterceptorContext(this);
+			foreach (var interceptor in mInterceptors)
+			{
+				interceptor(ic);
+			}
+			
 			var request = mClient.CreateRequest(mVerb, mRequestPath, mParameters);
 
 			SetAuthentication(request);
@@ -150,7 +173,7 @@ namespace XyrusWorx.Communication.Client
 				{
 					request.WriteBody(mBody);
 				}
-
+				
 				var result = request.Invoke(cancellationToken);
 
 				RunCallbacks(result);
@@ -189,9 +212,32 @@ namespace XyrusWorx.Communication.Client
 				return WebServiceClientResponse.FromError(exception);
 			}
 		}
-
+		
 		public string RequestPath => mRequestPath;
 		public RequestVerb RequestVerb => mVerb;
+
+		internal IKeyValueStore<string> GetHeaders() => mHeaders;
+		internal IKeyValueStore<object> GetParameters() => mParameters;
+
+		internal string GetVerb() => mVerb.ToString().ToUpperInvariant();
+		internal string GetRequestPath() => mRequestPath;
+		internal string GetBodyString()
+		{
+			var comm = mClient.Configuration.CommunicationStrategy ?? new JsonCommunicationStrategy();
+
+			using (var stream = new MemoryStream())
+			{
+				if (mBody != null)
+				{
+					comm.WriteAsync(stream, Encoding.Unicode, mBody);
+				}
+
+				stream.Seek(0, SeekOrigin.Begin);
+				
+				return Encoding.Unicode.GetString(stream.ToArray());
+			}
+
+		}
 
 		private bool HasBody()
 		{
