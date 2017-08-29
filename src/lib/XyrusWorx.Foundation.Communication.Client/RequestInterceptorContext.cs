@@ -23,7 +23,7 @@ namespace XyrusWorx.Communication.Client
 		public string Verb => mOwner.GetVerb();
 		
 		[NotNull]
-		public string Path => mOwner.GetRequestPath();
+		public Uri RequestUri => mOwner.GetRequestUri();
 		
 		[NotNull]
 		public IKeyValueStore<object> Parameters => mOwner.GetParameters();
@@ -32,6 +32,10 @@ namespace XyrusWorx.Communication.Client
 		public IKeyValueStore<string> Headers => mOwner.GetHeaders();
 
 		[CanBeNull]
-		public string GetBodyString() => mOwner.GetBodyString().NormalizeNull();
+		public string Body
+		{
+			get => mOwner.GetBodyString().NormalizeNull();
+			set => mOwner.Body(value);
+		}
 	}
 }

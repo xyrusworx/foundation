@@ -23,7 +23,9 @@ namespace XyrusWorx.Communication.Client
 		private readonly List<ServiceClientAuthentication> mAuthentications;
 		private readonly List<Action<RequestInterceptorContext>> mInterceptors;
 		private RequestVerb mVerb;
+		private bool mUseBodyString;
 		private object mBody;
+		private string mBodyString;
 
 		internal RequestBuilder([NotNull] WebServiceClient client, [NotNull] string requestPath)
 		{
@@ -97,6 +99,15 @@ namespace XyrusWorx.Communication.Client
 		public RequestBuilder Body<T>([CanBeNull] T body)
 		{
 			mBody = body;
+			mUseBodyString = false;
+			return this;
+		}
+		
+		[NotNull]
+		public RequestBuilder Body([CanBeNull] string body)
+		{
+			mBodyString = body;
+			mUseBodyString = true;
 			return this;
 		}
 
@@ -171,7 +182,14 @@ namespace XyrusWorx.Communication.Client
 			{
 				if (HasBody())
 				{
-					request.WriteBody(mBody);
+					if (mUseBodyString)
+					{
+						request.WriteBodyString(mBodyString);
+					}
+					else
+					{
+						request.WriteBody(mBody);
+					}
 				}
 				
 				var result = request.Invoke(cancellationToken);
@@ -204,7 +222,14 @@ namespace XyrusWorx.Communication.Client
 			{
 				if (HasBody())
 				{
-					await request.WriteBodyAsync(mBody);
+					if (mUseBodyString)
+					{
+						await request.WriteBodyStringAsync(mBodyString);
+					}
+					else
+					{
+						await request.WriteBodyAsync(mBody);
+					}
 				}
 
 				var result = await request.InvokeAsync(cancellationToken);
@@ -225,28 +250,39 @@ namespace XyrusWorx.Communication.Client
 		internal IKeyValueStore<string> GetHeaders() => mHeaders;
 		internal IKeyValueStore<object> GetParameters() => mParameters;
 
+		internal Uri GetRequestUri() => mClient.CreateRequestUri(mVerb, mRequestPath, mParameters);
+		
 		internal string GetVerb() => mVerb.ToString().ToUpperInvariant();
-		internal string GetRequestPath() => mRequestPath;
 		internal string GetBodyString()
 		{
+			if (mUseBodyString)
+			{
+				return mBodyString;
+			}
+			
 			var comm = mClient.Configuration.CommunicationStrategy ?? new JsonCommunicationStrategy();
+			var enc = mClient.Configuration.Encoding ?? Encoding.UTF8;
 
 			using (var stream = new MemoryStream())
 			{
 				if (mBody != null)
 				{
-					comm.WriteAsync(stream, Encoding.Unicode, mBody);
+					comm.WriteAsync(stream, enc, mBody);
 				}
 
 				stream.Seek(0, SeekOrigin.Begin);
-				
-				return Encoding.Unicode.GetString(stream.ToArray());
+				return enc.GetString(stream.ToArray());
 			}
 
 		}
 
 		private bool HasBody()
 		{
+			if (mUseBodyString)
+			{
+				return !string.IsNullOrEmpty(mBodyString);
+			}
+			
 			return mBody != null && mVerb != RequestVerb.Get;
 		}
 		private void SetAuthentication(WebServiceClientRequest request)

@@ -67,6 +67,13 @@ namespace XyrusWorx.Communication.Client
 
 			task.Wait();
 		}
+		
+		public void WriteBodyString(string data)
+		{
+			var task = WriteBodyStringAsync(data);
+
+			task.Wait();
+		}
 
 		[NotNull]
 		public async Task WriteBodyAsync(object data)
@@ -74,6 +81,15 @@ namespace XyrusWorx.Communication.Client
 			using (var stream = await mRequest.GetRequestStreamAsync())
 			{
 				await mCommunicationStrategy.WriteAsync(stream, mConfiguration.Encoding ?? Encoding.UTF8, data);
+			}
+		}
+		
+		[NotNull]
+		public async Task WriteBodyStringAsync(string data)
+		{
+			using (var stream = new StreamWriter(await mRequest.GetRequestStreamAsync(), mConfiguration.Encoding ?? Encoding.UTF8))
+			{
+				stream.Write(data);
 			}
 		}
 

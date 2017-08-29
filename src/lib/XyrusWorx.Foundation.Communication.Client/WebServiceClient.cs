@@ -30,6 +30,19 @@ namespace XyrusWorx.Communication.Client
 		[NotNull]
 		public WebServiceClientRequest CreateRequest(RequestVerb verb, string relativeUri, IKeyValueStore<object> queryParameters = null)
 		{
+			var innerRequest = WebRequest.CreateHttp(CreateRequestUri(verb, relativeUri, queryParameters));
+
+			innerRequest.Method = verb.ToString().ToUpper();
+			innerRequest.Accept = CommunicationStrategy.ContentType;
+			innerRequest.ContentType = $"{CommunicationStrategy.ContentType}; charset={(mConfiguration.Encoding ?? Encoding.UTF8).WebName}";
+
+			var request = new WebServiceClientRequest(mConfiguration, CommunicationStrategy, innerRequest);
+
+			return request;
+		}
+
+		internal Uri CreateRequestUri(RequestVerb verb, string relativeUri, IKeyValueStore<object> queryParameters = null)
+		{
 			var uriString = new Uri(BaseUri, relativeUri ?? string.Empty).ToString();
 			if (uriString.Contains("?"))
 			{
@@ -50,15 +63,7 @@ namespace XyrusWorx.Communication.Client
 				}
 			}
 
-			var innerRequest = WebRequest.CreateHttp(new Uri(uriString));
-
-			innerRequest.Method = verb.ToString().ToUpper();
-			innerRequest.Accept = CommunicationStrategy.ContentType;
-			innerRequest.ContentType = $"{CommunicationStrategy.ContentType}; charset={(mConfiguration.Encoding ?? Encoding.UTF8).WebName}";
-
-			var request = new WebServiceClientRequest(mConfiguration, CommunicationStrategy, innerRequest);
-
-			return request;
+			return new Uri(uriString);
 		}
 
 		private CommunicationStrategy CommunicationStrategy => mConfiguration.CommunicationStrategy ?? new JsonCommunicationStrategy();
