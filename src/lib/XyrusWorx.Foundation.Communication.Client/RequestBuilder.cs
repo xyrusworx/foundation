@@ -21,7 +21,7 @@ namespace XyrusWorx.Communication.Client
 		private readonly IKeyValueStore<object> mParameters;
 		private readonly List<Tuple<Func<IWebResult, bool>, Action<WebServiceClientResponse>>> mCallbacks;
 		private readonly List<ServiceClientAuthentication> mAuthentications;
-		private readonly List<Action<RequestInterceptorContext>> mInterceptors;
+		private readonly List<Func<RequestInterceptorContext, Task>> mInterceptors;
 		private RequestVerb mVerb;
 		private bool mUseBodyString;
 		private object mBody;
@@ -43,7 +43,7 @@ namespace XyrusWorx.Communication.Client
 			mParameters = new MemoryKeyValueStore();
 			mAuthentications = new List<ServiceClientAuthentication>();
 			mCallbacks = new List<Tuple<Func<IWebResult, bool>, Action<WebServiceClientResponse>>>();
-			mInterceptors = new List<Action<RequestInterceptorContext>>();
+			mInterceptors = new List<Func<RequestInterceptorContext, Task>>();
 			mClient = client;
 			mRequestPath = requestPath;
 			mVerb = RequestVerb.Get;
@@ -153,7 +153,7 @@ namespace XyrusWorx.Communication.Client
 		}
 
 		[NotNull]
-		public RequestBuilder Interceptor([NotNull] Action<RequestInterceptorContext> callback)
+		public RequestBuilder Interceptor([NotNull] Func<RequestInterceptorContext, Task> callback)
 		{
 			if (callback == null)
 			{
@@ -170,7 +170,15 @@ namespace XyrusWorx.Communication.Client
 			var ic = new RequestInterceptorContext(this);
 			foreach (var interceptor in mInterceptors)
 			{
-				interceptor(ic);
+				var task = interceptor(ic);
+				try
+				{
+					task.Wait(cancellationToken);
+				}
+				catch (OperationCanceledException)
+				{
+					break;
+				}
 			}
 			
 			var request = mClient.CreateRequest(mVerb, mRequestPath, mParameters);
@@ -193,7 +201,11 @@ namespace XyrusWorx.Communication.Client
 				}
 				
 				var result = request.Invoke(cancellationToken);
-
+				if (cancellationToken.IsCancellationRequested)
+				{
+					return result;
+				}
+				
 				RunCallbacks(result);
 
 				return result;
@@ -210,7 +222,7 @@ namespace XyrusWorx.Communication.Client
 			var ic = new RequestInterceptorContext(this);
 			foreach (var interceptor in mInterceptors)
 			{
-				interceptor(ic);
+				await interceptor(ic);
 			}
 			
 			var request = mClient.CreateRequest(mVerb, mRequestPath, mParameters);
@@ -233,6 +245,10 @@ namespace XyrusWorx.Communication.Client
 				}
 
 				var result = await request.InvokeAsync(cancellationToken);
+				if (cancellationToken.IsCancellationRequested)
+				{
+					return result;
+				}
 
 				RunCallbacks(result);
 

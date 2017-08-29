@@ -63,7 +63,7 @@ namespace XyrusWorx.Runtime
 		public static T CreateInstance<T>([NotNull] this IServiceLocator serviceLocator) => (T)serviceLocator.CreateInstance(typeof(T));
 
 		public static void AutoRegister([NotNull] this IServiceLocator serviceLocator, [NotNull] Assembly assembly, [NotNull] Type baseType, params Type[] additionalBaseTypes)
-			=> AutoRegister(serviceLocator, assembly, (additionalBaseTypes ?? new Type[0]).Prepend(baseType));
+			=> AutoRegister(serviceLocator, assembly, new[]{baseType}.Concat(additionalBaseTypes ?? new Type[0]));
 
 		public static void AutoRegister([NotNull] this IServiceLocator serviceLocator, [NotNull] Assembly assembly, [NotNull] IEnumerable<Type> baseTypes)
 		{
