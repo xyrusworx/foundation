@@ -8,6 +8,7 @@ namespace XyrusWorx.Communication.Client
 	public class RequestInterceptorContext
 	{
 		private readonly RequestBuilder mOwner;
+		private Result mInterceptorResult = Result.Success;
 
 		internal RequestInterceptorContext([NotNull] RequestBuilder owner)
 		{
@@ -31,11 +32,19 @@ namespace XyrusWorx.Communication.Client
 		[NotNull]
 		public IKeyValueStore<string> Headers => mOwner.GetHeaders();
 
+		public void Abort(string errorMessage)
+		{
+			mInterceptorResult = Result.CreateError(errorMessage);
+		}
+
 		[CanBeNull]
 		public string Body
 		{
 			get => mOwner.GetBodyString().NormalizeNull();
 			set => mOwner.Body(value);
 		}
+
+		[NotNull]
+		internal Result InterceptorResult => mInterceptorResult;
 	}
 }

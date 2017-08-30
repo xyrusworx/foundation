@@ -181,6 +181,11 @@ namespace XyrusWorx.Communication.Client
 				}
 			}
 			
+			if (ic.InterceptorResult.HasError)
+			{
+				return WebServiceClientResponse.FromError(new Exception(ic.InterceptorResult.ErrorDescription.NormalizeNull() ?? "An unknown error occured when preparing the request."));
+			}
+			
 			var request = mClient.CreateRequest(mVerb, mRequestPath, mParameters);
 
 			SetAuthentication(request);
@@ -223,6 +228,11 @@ namespace XyrusWorx.Communication.Client
 			foreach (var interceptor in mInterceptors)
 			{
 				await interceptor(ic);
+			}
+
+			if (ic.InterceptorResult.HasError)
+			{
+				return WebServiceClientResponse.FromError(new Exception(ic.InterceptorResult.ErrorDescription.NormalizeNull() ?? "An unknown error occured when preparing the request."));
 			}
 			
 			var request = mClient.CreateRequest(mVerb, mRequestPath, mParameters);
