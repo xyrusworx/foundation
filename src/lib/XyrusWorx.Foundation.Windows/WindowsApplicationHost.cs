@@ -25,6 +25,7 @@ namespace XyrusWorx.Windows
 			}
 
 			mApplication = application;
+			mApplication.Host = this;
 		}
 			
 		public XyrusWorx.Runtime.Application Application
