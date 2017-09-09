@@ -172,9 +172,9 @@ namespace XyrusWorx.Communication.Client
 
 			var headers = new MemoryKeyValueStore<string>();
 
-			foreach (var headerKey in response.Headers.AllKeys)
+			foreach (var headerKey in response.Headers?.AllKeys ?? new string[0])
 			{
-				headers[headerKey] = response.Headers[headerKey];
+				headers[headerKey] = response.Headers?[headerKey];
 			}
 
 			var http = response as HttpWebResponse;

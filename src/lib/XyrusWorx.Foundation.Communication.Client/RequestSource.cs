@@ -27,10 +27,7 @@ namespace XyrusWorx.Communication.Client
 		[NotNull] public RequestBuilder Request([NotNull] string requestPath, RequestVerb verb) => Request(requestPath).Verb(verb);
 
 		[NotNull]
-		protected virtual RequestBuilder ConfigureRequest([NotNull] RequestBuilder request)
-		{
-			return request;
-		}
+		protected virtual RequestBuilder ConfigureRequest([NotNull] RequestBuilder request) => request;
 
 		private RequestBuilder Request([NotNull] string requestPath)
 		{
@@ -39,7 +36,8 @@ namespace XyrusWorx.Communication.Client
 				throw new ArgumentNullException(nameof(requestPath));
 			}
 
-			var builder =  new RequestBuilder(mClient, $"/{mNode?.Trim('/')}/{requestPath.TrimStart('/')}");
+			var path = new[]{mNode?.Trim('/'), requestPath.TrimStart('/')}.Concat("/");
+			var builder =  new RequestBuilder(mClient, $"/{path}");
 
 			// ReSharper disable once ConstantNullCoalescingCondition
 			return ConfigureRequest(builder) ?? builder;
