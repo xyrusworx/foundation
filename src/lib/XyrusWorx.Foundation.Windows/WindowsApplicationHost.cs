@@ -12,33 +12,33 @@ namespace XyrusWorx.Windows
 	[PublicAPI]
 	public class WindowsApplicationHost : IWindowsApplicationHost
 	{
-		private readonly Dispatcher mDispatcher;
 		private readonly WpfApplication mApplication;
 
-		internal WindowsApplicationHost([NotNull] Dispatcher dispatcher, [NotNull] WpfApplication application)
+		public WindowsApplicationHost([NotNull] Dispatcher dispatcher) : this(new WpfApplication(dispatcher))
 		{
-			if (dispatcher == null)
-			{
-				throw new ArgumentNullException(nameof(dispatcher));
-			}
+		}
+		public WindowsApplicationHost([NotNull] WpfApplication application)
+		{
 			if (application == null)
 			{
 				throw new ArgumentNullException(nameof(application));
 			}
 
-			mDispatcher = dispatcher;
 			mApplication = application;
 		}
 			
-		public XyrusWorx.Runtime.Application Application => mApplication;
-		
+		public XyrusWorx.Runtime.Application Application
+		{
+			get => mApplication;
+		}
+
 		public ViewModel ViewModel { get; set; }
 		public FrameworkElement View { get; set; }
 
-		public void Execute(Action action, TaskPriority priority = TaskPriority.Normal) => mDispatcher.Invoke(action, (DispatcherPriority)(int)priority);
-		public T Execute<T>(Func<T> func, TaskPriority priority = TaskPriority.Normal) => mDispatcher.Invoke(func, (DispatcherPriority)(int)priority);
-		public async Task ExecuteAsync(Action action, TaskPriority priority = TaskPriority.Normal) => await mDispatcher.InvokeAsync(action, (DispatcherPriority)(int)priority);
-		public async Task<T> ExecuteAsync<T>(Func<T> func, TaskPriority priority = TaskPriority.Normal) => await mDispatcher.InvokeAsync(func, (DispatcherPriority)(int)priority);
+		public void Execute(Action action, TaskPriority priority = TaskPriority.Normal) => mApplication.Dispatcher.Invoke(action, (DispatcherPriority)(int)priority);
+		public T Execute<T>(Func<T> func, TaskPriority priority = TaskPriority.Normal) => mApplication.Dispatcher.Invoke(func, (DispatcherPriority)(int)priority);
+		public async Task ExecuteAsync(Action action, TaskPriority priority = TaskPriority.Normal) => await mApplication.Dispatcher.InvokeAsync(action, (DispatcherPriority)(int)priority);
+		public async Task<T> ExecuteAsync<T>(Func<T> func, TaskPriority priority = TaskPriority.Normal) => await mApplication.Dispatcher.InvokeAsync(func, (DispatcherPriority)(int)priority);
 
 		public void Shutdown(int exitCode = 0)
 		{

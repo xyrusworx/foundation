@@ -13,11 +13,16 @@ namespace XyrusWorx.Windows.Runtime
 	[PublicAPI]
 	[SuppressMessage("ReSharper", "ConstantConditionalAccessQualifier")]
 	[SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-	public abstract class WpfApplication : Application, IDialogService, IExceptionHandlerService
+	public class WpfApplication : Application, IDialogService, IExceptionHandlerService
 	{
-		protected WpfApplication() : this(System.Windows.Application.Current?.Dispatcher){}
-		protected WpfApplication(Dispatcher dispatcher)
+		internal protected WpfApplication([NotNull] Dispatcher dispatcher)
 		{
+			if (dispatcher == null)
+			{
+				throw new ArgumentNullException(nameof(dispatcher));
+			}
+
+			Dispatcher = dispatcher;
 			WaitHandler = new WpfWaitHandler(dispatcher);
 
 			ServiceLocator.Default.Register<IMessageBox, WindowsMessageBox>();
@@ -25,7 +30,10 @@ namespace XyrusWorx.Windows.Runtime
 		}
 
 		[NotNull]
-		public IWindowsApplicationHost Host { get; internal set; }
+		public Dispatcher Dispatcher { get; }
+		
+		[NotNull]
+		public IWindowsApplicationHost Host { get; internal protected set; }
 
 		[NotNull]
 		public IMessageBox Dialog => new WindowsMessageBox(Host);
@@ -35,14 +43,15 @@ namespace XyrusWorx.Windows.Runtime
 		{
 			try
 			{
-				Host.Execute(() => Host.Shutdown(1));
+				OnTerminate();
+				Host.Execute(() => Host.Shutdown(exitCode));
 			}
 			catch
 			{
 				// ignore
 			}
 
-			Environment.Exit(1);
+			Environment.Exit(exitCode);
 		}
 
 		public FrameworkElement GetView() => Host?.View;
