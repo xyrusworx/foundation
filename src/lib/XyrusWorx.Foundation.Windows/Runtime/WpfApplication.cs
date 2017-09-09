@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using JetBrains.Annotations;
@@ -43,7 +45,7 @@ namespace XyrusWorx.Windows.Runtime
 		{
 			try
 			{
-				OnTerminate();
+				OnShutdown();
 				Host.Execute(() => Host.Shutdown(exitCode));
 			}
 			catch
@@ -75,12 +77,12 @@ namespace XyrusWorx.Windows.Runtime
 		}
 		protected sealed override void Cleanup(bool wasCancelled)
 		{
-			OnTerminate();
+			OnShutdown();
 		}
 
 		protected virtual void OnInitialize() { }
-		protected virtual void OnTerminate() { }
-
+		protected virtual void OnShutdown() { }
+		
 		internal bool GlobalExceptionHandler([NotNull] Exception exception)
 		{
 			if (exception == null)
@@ -91,5 +93,87 @@ namespace XyrusWorx.Windows.Runtime
 			return HandleException(exception);
 		}
 		IMessageBox IDialogService.CreateDialog() => Dialog;
+
+		[NotNull]
+		public static WindowsApplicationHost Bootstrap<TView, TViewModel>([CanBeNull] Assembly locatorAssembly = null)
+			where TView : FrameworkElement, new()
+			where TViewModel : ViewModel 
+			=> WpfApplication<TView, TViewModel>.Bootstrap<WpfApplication<TView, TViewModel>>(locatorAssembly: locatorAssembly ?? Assembly.GetCallingAssembly());
+	}
+
+	[PublicAPI]
+	public class WpfApplication<TMainView, TMainViewModel> : WpfApplication
+		where TMainView: FrameworkElement, new()
+		where TMainViewModel: ViewModel
+	{
+		private TMainViewModel mViewModel;
+		private TMainView mView;
+
+		public WpfApplication() : base(Dispatcher.CurrentDispatcher)
+		{
+		}
+
+		protected virtual void OnConfigureWindow([NotNull] Window window) { }
+		protected virtual Task OnInitialize([NotNull] TMainViewModel viewModel) => Task.CompletedTask;
+		protected virtual Task OnShutdown([NotNull] TMainViewModel viewModel) => Task.CompletedTask;
+		
+		protected sealed override void OnInitialize()
+		{
+			var mainWindow = new Window();
+
+			mainWindow.Title = Metadata.ProductName;
+			mainWindow.Content = mView;
+			mainWindow.DataContext = mViewModel;
+			
+			OnConfigureWindow(mainWindow);
+			OnInitialize(mViewModel).Begin();
+
+			mainWindow.Closed += (o, e) => Shutdown(0);
+			mainWindow.Show();
+		}
+		protected sealed override void OnShutdown()
+		{
+			OnShutdown(mViewModel).ExecuteSynchronous();
+			Dispatcher.InvokeShutdown();
+		}
+
+		internal void Load([CanBeNull] IServiceLocator serviceLocator = null, [CanBeNull] Assembly locatorAssembly = null)
+		{
+			serviceLocator = serviceLocator ?? ServiceLocator.Default;
+			locatorAssembly = locatorAssembly ?? Assembly.GetCallingAssembly();
+
+			serviceLocator.Register<Application>(this);
+			serviceLocator.AutoRegister(locatorAssembly, new[]{typeof(ViewModel)});
+
+			var viewModelResult = serviceLocator.TryResolve<TMainViewModel>();
+			if (viewModelResult.HasError || viewModelResult.Data == null)
+			{
+				mViewModel = serviceLocator.CreateInstance<TMainViewModel>();
+			}
+			else
+			{
+				mViewModel = viewModelResult.Data;
+			}
+			
+			mView = new TMainView();
+		}
+		
+		[NotNull]
+		internal protected static WindowsApplicationHost Bootstrap<TApplication>([CanBeNull] Assembly locatorAssembly = null) 
+			where TApplication: WpfApplication<TMainView, TMainViewModel>, new()
+		{
+			var application = new TApplication();
+			var applicationHost = new WindowsApplicationHost(application);
+
+			application.Load(locatorAssembly: locatorAssembly ?? Assembly.GetCallingAssembly());
+
+			applicationHost.ViewModel = application.mViewModel;
+			applicationHost.View = application.mView;
+			applicationHost.Application.Run();
+			
+			Dispatcher.Run();
+
+			return applicationHost;
+		}
 	}
 }

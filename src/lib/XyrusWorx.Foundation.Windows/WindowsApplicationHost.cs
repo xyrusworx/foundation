@@ -31,6 +31,10 @@ namespace XyrusWorx.Windows
 		{
 			get => mApplication;
 		}
+		public Dispatcher Dispatcher
+		{
+			get => mApplication.Dispatcher;
+		}
 
 		public ViewModel ViewModel { get; set; }
 		public FrameworkElement View { get; set; }
