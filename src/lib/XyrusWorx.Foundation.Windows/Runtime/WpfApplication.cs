@@ -109,8 +109,12 @@ namespace XyrusWorx.Windows.Runtime
 		private TMainViewModel mViewModel;
 		private TMainView mView;
 
-		public WpfApplication() : base(Dispatcher.CurrentDispatcher)
+		public WpfApplication() : this(Dispatcher.CurrentDispatcher)
 		{
+		}
+		public WpfApplication(Dispatcher dispatcher) : base(dispatcher)
+		{
+			InitializeComponent();
 		}
 
 		protected virtual void OnConfigureWindow([NotNull] Window window) { }
@@ -126,24 +130,33 @@ namespace XyrusWorx.Windows.Runtime
 			mainWindow.DataContext = mViewModel;
 			
 			OnConfigureWindow(mainWindow);
-			OnInitialize(mViewModel).Begin();
+
+			if (mViewModel != null)
+			{
+				OnInitialize(mViewModel).Begin();
+			}
 
 			mainWindow.Closed += (o, e) => Shutdown(0);
 			mainWindow.Show();
 		}
 		protected sealed override void OnShutdown()
 		{
-			OnShutdown(mViewModel).ExecuteSynchronous();
+			if (mViewModel != null)
+			{
+				OnShutdown(mViewModel).ExecuteSynchronous();
+			}
+			
 			Dispatcher.InvokeShutdown();
 		}
 
-		internal void Load([CanBeNull] IServiceLocator serviceLocator = null, [CanBeNull] Assembly locatorAssembly = null)
+		internal protected void InitializeComponent([CanBeNull] IServiceLocator serviceLocator = null, [CanBeNull] Assembly locatorAssembly = null)
 		{
 			serviceLocator = serviceLocator ?? ServiceLocator.Default;
-			locatorAssembly = locatorAssembly ?? Assembly.GetCallingAssembly();
 
-			serviceLocator.Register<Application>(this);
-			serviceLocator.AutoRegister(locatorAssembly, new[]{typeof(ViewModel)});
+			if (locatorAssembly != null)
+			{
+				serviceLocator.AutoRegister(locatorAssembly, new[]{typeof(ViewModel)});
+			}
 
 			var viewModelResult = serviceLocator.TryResolve<TMainViewModel>();
 			if (viewModelResult.HasError || viewModelResult.Data == null)
@@ -165,7 +178,10 @@ namespace XyrusWorx.Windows.Runtime
 			var application = new TApplication();
 			var applicationHost = new WindowsApplicationHost(application);
 
-			application.Load(locatorAssembly: locatorAssembly ?? Assembly.GetCallingAssembly());
+			ServiceLocator.Default.Register<Application>(application);
+			ServiceLocator.Default.Register<IApplicationHost>(applicationHost);
+			
+			application.InitializeComponent(locatorAssembly: locatorAssembly ?? Assembly.GetCallingAssembly());
 
 			applicationHost.ViewModel = application.mViewModel;
 			applicationHost.View = application.mView;
