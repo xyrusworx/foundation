@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 using JetBrains.Annotations;
 using XyrusWorx.Runtime;
 using XyrusWorx.Windows.ViewModels;
@@ -14,9 +15,10 @@ namespace XyrusWorx.Windows.Runtime
 	[SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
 	public abstract class WpfApplication : Application, IDialogService, IExceptionHandlerService
 	{
-		protected WpfApplication()
+		protected WpfApplication() : this(System.Windows.Application.Current?.Dispatcher){}
+		protected WpfApplication(Dispatcher dispatcher)
 		{
-			WaitHandler = new WpfWaitHandler();
+			WaitHandler = new WpfWaitHandler(dispatcher);
 
 			ServiceLocator.Default.Register<IMessageBox, WindowsMessageBox>();
 			ServiceLocator.Default.Register<IExceptionHandlerService>(this);

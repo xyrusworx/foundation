@@ -8,16 +8,22 @@ namespace XyrusWorx.Windows.Runtime
 	[PublicAPI]
 	public class WpfWaitHandler : OperationWaitHandler
 	{
+		private readonly Dispatcher mDispatcher;
+
+		public WpfWaitHandler([CanBeNull] Dispatcher dispatcher)
+		{
+			mDispatcher = dispatcher;
+		}
+	
 		protected override void ProcessMessages()
 		{
-			var dispatcher = System.Windows.Application.Current?.Dispatcher;
-			if (dispatcher == null)
+			if (mDispatcher == null)
 			{
 				Thread.Sleep(100);
 			}
 			else
 			{
-				dispatcher.Invoke(() => { }, DispatcherPriority.Background);
+				mDispatcher.Invoke(() => { }, DispatcherPriority.Background);
 			}
 		}
 	}
