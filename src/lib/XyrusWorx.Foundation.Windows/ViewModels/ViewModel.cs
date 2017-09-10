@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Windows.Threading;
 using JetBrains.Annotations;
 
 namespace XyrusWorx.Windows.ViewModels
@@ -36,7 +37,7 @@ namespace XyrusWorx.Windows.ViewModels
 		}
 
 		[NotifyPropertyChangedInvocator]
-		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			if (mNotificationSupressionScope == null)
 			{
@@ -48,11 +49,26 @@ namespace XyrusWorx.Windows.ViewModels
 				return;
 			}
 
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-			GlobalPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			void Notify()
+			{
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				GlobalPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
+
+			if (PropertyChangedDispatcher != null)
+			{
+				PropertyChangedDispatcher.Invoke(Notify);
+			}
+			else
+			{
+				Notify();
+			}
 		}
 
 		public static event PropertyChangedEventHandler GlobalPropertyChanged;
+
+		[IgnoreDataMember]
+		protected virtual Dispatcher PropertyChangedDispatcher => null;
 		
 		private void Setup()
 		{
@@ -73,7 +89,10 @@ namespace XyrusWorx.Windows.ViewModels
 				if (Equals(value, mModel)) return;
 				mModel = value;
 				OnPropertyChanged(string.Empty);
+				OnModelChanged(value);
 			}
 		}
+
+		protected virtual void OnModelChanged(T model){}
 	}
 }
