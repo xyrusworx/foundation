@@ -31,7 +31,9 @@
     <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
+    <PackageReference Include="JetBrains.Annotations" >
+      <Version>11.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <RootNamespace>XyrusWorx.Extensibility</RootNamespace>
