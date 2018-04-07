@@ -101,11 +101,6 @@ namespace XyrusWorx.Windows.Runtime
 			{
 				MainWindow.DataContext = mViewModel;
 			}
-			else
-			{
-				Shutdown(0);
-				return;
-			}
 
 			var specificApplication = mApplication.CastTo<WpfApplication>();
 			if (specificApplication != null)
