@@ -10,7 +10,7 @@
             This package contains utilities and solutions to orchestrate and coordinate large operations and
             parallel running tasks.
         </Description>
-    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>

@@ -1,0 +1,1 @@
+@powershell -nologo -noexit -command "gci '%~d0%~p0tools\' -filter '*.ps1' | %%{ . ($_.FullName) }"

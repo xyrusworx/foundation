@@ -2,11 +2,11 @@
   <PropertyGroup>
     <Company>XyrusWorx</Company>
     <Product>XyrusWorx Foundation</Product>
-    <Copyright>Copyright (c) 2014-2017 XyrusWorx. All rights reserved.</Copyright>
-    <Authors>$(Company)</Authors>
+    <Copyright>Copyright (c) 2014-2019 XyrusWorx</Copyright>
+    <Authors>gkiehne</Authors>
     <PackageId>$(AssemblyName)</PackageId>
-    <PackageVersion>3.1.0</PackageVersion>
-    <PackageBaseVersion>3.1.0</PackageBaseVersion>
+    <PackageVersion>3.1.1</PackageVersion>
+    <PackageBaseVersion>3.1.1</PackageBaseVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://xyrus-worx.org/license/mit</PackageLicenseUrl>
     <PackageProjectUrl>http://xyrus-worx.org</PackageProjectUrl>

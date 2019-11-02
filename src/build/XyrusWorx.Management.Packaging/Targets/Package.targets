@@ -32,7 +32,7 @@
 		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$description\$" ReplacementText="$(PackageDescription)" />
 		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$copyright\$" ReplacementText="$(Copyright)" />
 		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$requireLicenseAcceptance\$" ReplacementText="$(PackageRequireLicenseAcceptance)" />
-		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$licenseUrl\$" ReplacementText="$(PackageLicenseUrl)" />
+		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$license\$" ReplacementText="$(PackageLicenseUrl)" />
 		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$projectUrl\$" ReplacementText="$(PackageProjectUrl)" />
 		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$iconUrl\$" ReplacementText="$(PackageIconUrl)" />
 		<ReplaceTokens InputFilename="$(NuSpecPath)" OutputFilename="$(NuSpecPath)" MatchExpression="\$configuration\$" ReplacementText="$(Configuration)" />

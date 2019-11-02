@@ -8,7 +8,7 @@
     <AssemblyTitle>XyrusWorx Foundation Communication Client Package</AssemblyTitle>
     <Description>This package contains additional communication client services for XyrusWorx applications
         </Description>
-    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
@@ -35,7 +35,7 @@
     <ProjectReference Include="..\XyrusWorx.Foundation.IO\XyrusWorx.Foundation.IO.csproj" />
     <ProjectReference Include="..\XyrusWorx.Foundation\XyrusWorx.Foundation.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <PackageReference Include="Microsoft.Net.Http">
       <Version>2.2.29</Version>
     </PackageReference>
