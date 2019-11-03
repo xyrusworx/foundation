@@ -1,4 +1,4 @@
-# Core
+# Foundation
 ---
 
 This repository consists of libraries and packages, which are being used in other projects as a base layer. The main purpose is to provide a sleek and streamlined set of utilities for all kinds of projects as well as a common runtime for CLI- and GUI-applications.
